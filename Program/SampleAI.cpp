@@ -1,8 +1,8 @@
-#include "NIIGATA.h"
+#include "Game.h"
 #include "SampleAI.h"
 #include "stdafx.h"
 
-void think(NIIGATA status, int teamId, Move &move1, Move &move2) {
+void SampleAI::think(Game status, int teamId, Move &move1, Move &move2) {
 	//move1 = Move(RU, MOVE);
 	//move2 = Move(RU, MOVE);
 	//return;
@@ -15,7 +15,7 @@ void think(NIIGATA status, int teamId, Move &move1, Move &move2) {
 
 	rep(i, 2) {
 		int playerId = 2 * teamId + i;
-		NIIGATA::Player &player = status.player[playerId];
+		Game::Player &player = status.player[playerId];
 		std::vector<T> dirs;
 
 		rep(dir, 8) {

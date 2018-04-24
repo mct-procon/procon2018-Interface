@@ -120,14 +120,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\naotti_sample01\Main.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="SampleAI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\naotti_sample01\Move.h" />
-    <ClInclude Include="..\naotti_sample01\NIIGATA.h" />
-    <ClInclude Include="..\naotti_sample01\SampleAI.h" />
-    <ClInclude Include="..\naotti_sample01\stdafx.h" />
+    <ClInclude Include="Move.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="SampleAI.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,24 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\naotti_sample01\Main.cpp">
+    <ClCompile Include="SampleAI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="SampleAI.cpp">
+    <ClCompile Include="Main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\naotti_sample01\Move.h">
+    <ClInclude Include="Move.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\naotti_sample01\NIIGATA.h">
+    <ClInclude Include="SampleAI.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\naotti_sample01\SampleAI.h">
+    <ClInclude Include="stdafx.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\naotti_sample01\stdafx.h">
+    <ClInclude Include="Game.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
