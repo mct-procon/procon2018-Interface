@@ -3,7 +3,6 @@
 #include "move.hpp"
 
 class Game {
-public:
 	class Player {
 	public:
 		int y, x, teamId;	//y行x列目にいる.
@@ -14,15 +13,21 @@ public:
 	int h, w;	//フィールドの大きさ。どちらも2以上
 	int scoreMap[12][12];
 	bool isJinti[2][12][12];	//isJinti[teamId(0, 1)][y][x] = チームteamIdの陣地か？
-	Move move[4];
-	Player player[4];			//player[0], [1] … チーム0, player[2], [3] … チーム1
+	Move moves[4];
+	Player players[4];			//players[0], [1] … チーム0, players[2], [3] … チーム1
 	int nowTurn, allTurn;
 	int actionFrameCount;
 	int timeLimit;
-
+	bool isInEnd;
+	int tilePoints[2];
+	int areaPoints[2];
+public:
 	void init();
 	void update();
+	bool getIsInEnd();
 	void draw();
-	void action();
+private:
 	void mapinit();
+	void calcPoint();
+	void action();
 };

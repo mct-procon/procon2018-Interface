@@ -131,16 +131,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="draw_status.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="moveInput.cpp" />
+    <ClCompile Include="move_input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="draw_status.hpp" />
     <ClInclude Include="keyboard.hpp" />
     <ClInclude Include="move.hpp" />
     <ClInclude Include="game.hpp" />
-    <ClInclude Include="moveInput.hpp" />
+    <ClInclude Include="move_input.hpp" />
     <ClInclude Include="stdafx.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

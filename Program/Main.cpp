@@ -18,6 +18,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR arg, int) {
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 &&
 		ClearDrawScreen() == 0 && keyboardUpdate() == 0) {
 		game.update();
+		if (game.getIsInEnd() == true) {
+			break;
+		}
 		game.draw();
 	}
 

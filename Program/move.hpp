@@ -24,6 +24,5 @@ enum ACTION {
 struct Move {
 	DIRECTION dir;
 	ACTION action;
-	Move() {}
-	Move(DIRECTION dir, ACTION action) { this->dir = dir; this->action = action; }
+	Move() { dir = U; action = NONE; }
 };

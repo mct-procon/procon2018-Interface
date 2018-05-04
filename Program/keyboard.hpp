@@ -1,4 +1,5 @@
 #pragma once
 int keyboardUpdate();
 int keyboardGet(int);
-DINPUT_JOYSTATE gamepadGet(int padNum);
+DINPUT_JOYSTATE gamePadGet(int padNum);
+int gamePadButtonGet(int padNum, int buttonNum);
