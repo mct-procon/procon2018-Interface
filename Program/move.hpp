@@ -1,7 +1,7 @@
 //各プレイヤーが示すコマンド
 
 #pragma once
-#include "stdafx.h"
+#include "stdafx.hpp"
 
 //U == 0, RU == 1, …
 enum DIRECTION {
