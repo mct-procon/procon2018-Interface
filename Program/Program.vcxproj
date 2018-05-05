@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="calc_point.cpp" />
     <ClCompile Include="draw_status.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -138,6 +139,7 @@
     <ClCompile Include="move_input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="calc_point.hpp" />
     <ClInclude Include="draw_status.hpp" />
     <ClInclude Include="keyboard.hpp" />
     <ClInclude Include="move.hpp" />

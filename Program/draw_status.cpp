@@ -9,14 +9,14 @@ void drawStatus(
 	int tilePoints[], int areaPoints[]) {
 	int c_black = 0;
 	//時間
-	DrawFormatString(400, 600, c_black, "入力時間:%d/%d"
+	DrawFormatString(420, 600, c_black, "入力時間:%d/%d"
 		, actionFrameCount / 60, timeLimit);
 	//ターン
-	DrawFormatString(400, 614, c_black, "ターン数:%d/%d"
+	DrawFormatString(420, 614, c_black, "ターン数:%d/%d"
 		, nowTurn, allTurn);
 	//ポイント
 	for (int i = 0; i < 2; i++) {
-		DrawFormatString(50 + i * 650, 500, c_black,
+		DrawFormatString(20 + i * 750, 500, c_black,
 			"タイルポイント:%d\n領域ポイント:%d\n合計:%d\n"
 			, tilePoints[i], areaPoints[i], tilePoints[i] + areaPoints[i]);
 	}
@@ -28,7 +28,8 @@ void drawStatus(
 	for (int i = 0; i < 4; i++) {
 		drawVector(vectorX[i], vectorY[i], moves[i], i);
 	}
-
+	//ボタン説明
+	DrawFormatString(400, 700, c_black, "Rでリセット、ESCで終了");
 }
 
 void drawVector(int x, int y, Move move, int charaNum) {

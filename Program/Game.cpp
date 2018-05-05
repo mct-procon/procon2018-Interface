@@ -3,28 +3,49 @@
 #include "move.hpp"
 #include "move_input.hpp"
 #include "draw_status.hpp"
+#include "calc_point.hpp"
+#include "keyboard.hpp"
+#include <fstream>
+#include <string>
+
+using namespace std;
 
 void Game::init() {
 	mapinit();
 	nowTurn = 1;
-	allTurn = 100;
 	actionFrameCount = 0;
-	timeLimit = 15;
+	isResult = false;
 	isInEnd = false;
+	ifstream ifs("config.txt");
+	string str;
+	if (ifs.fail()) {
+		printfDx("ファイル読み込みに失敗しました。");
+		isInEnd = true;
+	}
+	getline(ifs, str);
+	sscanf_s(str.data(), "%d,%d", &timeLimit, &allTurn);
 }
 
 void Game::update() {
+	if (keyboardGet(KEY_INPUT_R) == 1) {
+		init();
+	}
+	if (keyboardGet(KEY_INPUT_ESCAPE) == 1) {
+		isInEnd = true;
+	}
+	if (isResult) return;
 	actionFrameCount++;
 	moveInput(moves);
-	calcPoint();
+
 	if (actionFrameCount / 60 == timeLimit) {
-		actionFrameCount = 0;
 		action();
+		calcPoint(isJinti, scoreMap, h, w, tilePoints, areaPoints);
 		if (nowTurn != allTurn) {
 			nowTurn++;
+			actionFrameCount = 0;
 		}
 		else {
-			isInEnd = true;
+			isResult = true;
 		}
 	}
 }
@@ -112,20 +133,9 @@ void Game::mapinit() {
 	players[2] = Player(startY, w - 1 - startX, 1);
 	players[3] = Player(h - 1 - startY, startX, 1);
 	rep(i, 4) isJinti[players[i].teamId][players[i].y][players[i].x] = true;
+	calcPoint(isJinti, scoreMap, h, w, tilePoints, areaPoints);
 }
 
-void Game::calcPoint() {
-	//タイルポイントS
-	//int scoreMap[12][12];
-	//bool isJinti[2][12][12];
-	tilePoints[0] = tilePoints[1] = 0;
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
-			if (isJinti[0][y][x]) tilePoints[0] += scoreMap[y][x];
-			else if (isJinti[1][y][x]) tilePoints[1] += scoreMap[y][x];
-		}
-	}
-}
 
 void Game::action() {
 	int i, j;

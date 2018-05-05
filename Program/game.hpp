@@ -18,6 +18,7 @@ class Game {
 	int nowTurn, allTurn;
 	int actionFrameCount;
 	int timeLimit;
+	bool isResult;
 	bool isInEnd;
 	int tilePoints[2];
 	int areaPoints[2];
@@ -28,6 +29,5 @@ public:
 	void draw();
 private:
 	void mapinit();
-	void calcPoint();
 	void action();
 };
