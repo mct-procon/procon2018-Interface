@@ -12,10 +12,13 @@ using namespace std;
 
 void Game::init() {
 	mapinit();
+	//drawStatusInit();
 	nowTurn = 1;
 	actionFrameCount = 0;
 	isResult = false;
 	isInEnd = false;
+	int i;
+	rep(i, 4) dirs[i] = NONE;
 	ifstream ifs("config.txt");
 	string str;
 	if (ifs.fail()) {
@@ -35,7 +38,7 @@ void Game::update() {
 	}
 	if (isResult) return;
 	actionFrameCount++;
-	moveInput(moves);
+	moveInput(dirs);
 
 	if (actionFrameCount / 60 == timeLimit) {
 		action();
@@ -55,11 +58,11 @@ bool Game::getIsInEnd() {
 }
 
 void Game::draw() {
-	int ty = 50, tx = 480 - 20 * w, cellSize = 40;
+	int ty = 90, tx = 400 - 20 * w, cellSize = 40;
 	int y, x, i;
 
 	//背景
-	DrawBox(0, 0, 960, 720, GetColor(208, 208, 208), TRUE);
+	DrawBox(0, 0, 800, 640, GetColor(208, 208, 208), TRUE);
 
 	//陣地
 	rep(y, h) {
@@ -104,16 +107,19 @@ void Game::draw() {
 		DrawFormatString(cx + 10, cy + 4, color, "%d", i % 2 + 1);
 	}
 
+	//ステータス
 	drawStatus(
 		actionFrameCount, timeLimit, nowTurn,
-		allTurn, moves, tilePoints, areaPoints);
+		allTurn, dirs, tilePoints, areaPoints);
 }
 
 void Game::mapinit() {
 	int y, x, i;
 
-	h = 6 + GetRand(7 - 1);
-	w = 6 + GetRand(7 - 1);
+	//h = 6 + GetRand(7 - 1);
+	h = 12;
+	//w = 6 + GetRand(7 - 1);
+	w = 12;
 	rep(y, (h + 1) / 2) rep(x, (w + 1) / 2)
 		scoreMap[y][x] = GetRand(16 - 1) + 1;
 	rep(y, (h + 1) / 2) rep(x, (w + 1) / 2)
@@ -139,60 +145,52 @@ void Game::mapinit() {
 
 void Game::action() {
 	int i, j;
-	int dy[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
-	int dx[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	int dy[9] = { -1, -1, 0, 1, 1, 1, 0, -1 ,0 };
+	int dx[9] = { 0, 1, 1, 1, 0, -1, -1, -1 ,0 };
 	bool isOk[4];
 
 	//行動可能なプレイヤを検索する
 	rep(i, 4) {
 		isOk[i] = false;
-		if (moves[i].action == NONE) continue;	//何もしない
-		if (moves[i].action == MOVE) {
-			int next_y = players[i].y + dy[moves[i].dir];
-			int next_x = players[i].x + dx[moves[i].dir];
-			if (next_y < 0 || next_y >= h || next_x < 0 || next_x >= w) { continue; }	//範囲外への移動はダメ
-			if (isJinti[!players[i].teamId][next_y][next_x]) { continue; }	//相手マスへの移動はダメ
-			int cnt_move = 0;
+		if (dirs[i] == NONE) continue;	//何もしない
+		int next_y = players[i].y + dy[dirs[i]];
+		int next_x = players[i].x + dx[dirs[i]];
+		if (next_y < 0 || next_y >= h || next_x < 0 || next_x >= w) {
+			dirs[i] = NONE;
+			continue;	//範囲外へのアクションはダメ
+		}
+		//アクション先が相手の陣地以外なら移動
+		if (!isJinti[!players[i].teamId][next_y][next_x]) {
+			bool isMove = true;
 			rep(j, 4) {
+				if (j == i) continue;
 				int ny, nx;
-				if (moves[j].action == MOVE) {
-					ny = players[j].y + dy[moves[j].dir];
-					nx = players[j].x + dx[moves[j].dir];
-					if (ny < 0 || ny >= h || nx < 0 || nx >= w || isJinti[!players[j].teamId][ny][nx]) {
-						ny = players[j].y;
-						nx = players[j].x;
-					}
-				}
-				else {
+				ny = players[j].y + dy[dirs[j]];
+				nx = players[j].x + dx[dirs[j]];
+				if (ny < 0 || ny >= h || nx < 0 || nx >= w || isJinti[!players[j].teamId][ny][nx]) {
 					ny = players[j].y;
 					nx = players[j].x;
 				}
-				if (ny == next_y && nx == next_x) cnt_move++;
+				if (ny == next_y && nx == next_x) isMove = false;
 			}
-			if (cnt_move > 1) continue;	//複数エージェントが同じマスに移動することはできない
+			if (!isMove) {
+				dirs[i] = NONE;
+				continue;	//複数エージェントが同じマスに移動することはできない
+			}
 			isOk[i] = true; //移動できる
 		}
-		if (moves[i].action == ERASE) {
-			int next_y = players[i].y + dy[moves[i].dir];
-			int next_x = players[i].x + dx[moves[i].dir];
-			if (next_y < 0 || next_y >= h || next_x < 0 || next_x >= w) { continue; }	//範囲外の除去はダメ
-			if (!isJinti[!players[i].teamId][next_y][next_x]) { continue; }	//相手マス以外の除去はダメ
-																			//除去しようとしたマスに次のターン相手が移動する or 留まったままでいる場合は、ダメ
+		//除去
+		else {
+			//除去しようとしたマスに次のターン相手が移動する or 留まったままでいる場合は、ダメ
+			bool isErase = true;
 			rep(j, 4) {
 				if (players[j].teamId == players[i].teamId) continue;
 				int ny, nx;
-				if (moves[j].action == MOVE) {
-					ny = players[j].y + dy[moves[j].dir];
-					nx = players[j].x + dx[moves[j].dir];
-					if (ny == next_y && nx == next_x) break;
-				}
-				else {
-					ny = players[j].y;
-					nx = players[j].x;
-					if (ny == next_y && nx == next_x) break;
-				}
+				ny = players[j].y + dy[dirs[j]];
+				nx = players[j].x + dx[dirs[j]];
+				if (ny == next_y && nx == next_x) isErase = false;
 			}
-			isOk[i] = true; //除去できる
+			if (isErase) isOk[i] = true; //除去できる
 		}
 	}
 
@@ -200,16 +198,16 @@ void Game::action() {
 	rep(i, 4) {
 		if (!isOk[i]) { continue; }
 
-		int next_y = players[i].y + dy[moves[i].dir];
-		int next_x = players[i].x + dx[moves[i].dir];
-		if (moves[i].action == MOVE) {
+		int next_y = players[i].y + dy[dirs[i]];
+		int next_x = players[i].x + dx[dirs[i]];
+		if (!isJinti[!players[i].teamId][next_y][next_x]) {
 			players[i].y = next_y;
 			players[i].x = next_x;
 			isJinti[players[i].teamId][next_y][next_x] = true;
 		}
-		if (moves[i].action == ERASE) {
+		else {
 			isJinti[!players[i].teamId][next_y][next_x] = false;
 		}
-		moves[i].action = NONE;
+		dirs[i] = NONE;
 	}
 }

@@ -5,7 +5,7 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR arg, int) {
 
 	//dxlib‚Ì‰Šú‰»
-	SetGraphMode(960, 720, 32);
+	SetGraphMode(800, 640, 32);
 	SetBackgroundColor(255, 255, 255);
 	ChangeWindowMode(TRUE);
 	DxLib_Init();

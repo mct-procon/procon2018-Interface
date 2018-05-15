@@ -13,16 +13,5 @@ enum DIRECTION {
 	DL,		//y++ x--
 	L,		//    x--
 	LU,		//y-- x--
-};
-
-enum ACTION {
-	NONE,
-	MOVE,
-	ERASE,
-};
-
-struct Move {
-	DIRECTION dir;
-	ACTION action;
-	Move() { dir = U; action = NONE; }
+	NONE,   //ˆÚ“®‚È‚µ
 };
