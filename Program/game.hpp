@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.hpp"
 #include "move.hpp"
 
 class Game {

@@ -1,23 +1,14 @@
 #include "dxlib.h"
-#include "game.hpp"
-#include "move.hpp"
 #include "keyboard.hpp"
+#include "interface.hpp"
 
 void dxlibInit();
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR arg, int) {
 	dxlibInit();
 	//ÉQÅ[ÉÄÇÃèâä˙âª
-	Game game;
-	game.init();
-	while (ScreenFlip() == 0 && ProcessMessage() == 0 &&
-		ClearDrawScreen() == 0 && keyboardUpdate() == 0) {
-		game.update();
-		if (game.getIsInEnd() == true) {
-			break;
-		}
-		game.draw();
-	}
+	
+	controllInterface();
 	DxLib_End();
 	return 0;
 }

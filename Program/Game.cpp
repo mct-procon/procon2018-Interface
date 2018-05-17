@@ -1,5 +1,5 @@
+#include "dxlib.h"
 #include "game.hpp"
-#include "stdafx.hpp"
 #include "move.hpp"
 #include "move_input.hpp"
 #include "draw_status.hpp"
@@ -17,8 +17,7 @@ void Game::init() {
 	actionFrameCount = 0;
 	isResult = false;
 	isInEnd = false;
-	int i;
-	rep(i, 4) dirs[i] = NONE;
+	for (int i = 0; i < 4; i++) dirs[i] = NONE;
 	ifstream ifs("config.txt");
 	string str;
 	if (ifs.fail()) {
@@ -59,14 +58,12 @@ bool Game::getIsInEnd() {
 
 void Game::draw() {
 	int ty = 90, tx = 400 - 20 * w, cellSize = 40;
-	int y, x, i;
 
 	//背景
 	DrawBox(0, 0, 800, 640, GetColor(208, 208, 208), TRUE);
-
 	//陣地
-	rep(y, h) {
-		rep(x, w) {
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
 			int ly = ty + cellSize * y;
 			int lx = tx + cellSize * x;
 			int ry = ly + cellSize;
@@ -80,14 +77,14 @@ void Game::draw() {
 	}
 
 	//グリッド
-	rep(y, h + 1) DrawLine(
+	for (int y = 0; y < h + 1; y++) DrawLine(
 		tx, ty + cellSize * y, tx + cellSize * w, ty + cellSize * y, 0, 2);
-	rep(x, w + 1) DrawLine(
+	for (int x = 0; x < w + 1; x++) DrawLine(
 		tx + cellSize * x, ty, tx + cellSize * x, ty + cellSize * h, 0, 2);
 
 	//数字
-	rep(y, h) {
-		rep(x, w) {
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
 			int ly = ty + cellSize * y + cellSize / 4;
 			int lx = tx + cellSize * x + cellSize / 5;
 			DrawFormatString(lx, ly, 0, "%d", scoreMap[y][x]);
@@ -95,7 +92,7 @@ void Game::draw() {
 	}
 
 	//プレイヤ
-	rep(i, 4) {
+	for (int i = 0; i < 4; i++) {
 		int cy = ty + cellSize / 2 + cellSize * players[i].y;
 		int cx = tx + cellSize / 2 + cellSize * players[i].x;
 		int color = (players[i].teamId == 0)
@@ -114,43 +111,59 @@ void Game::draw() {
 }
 
 void Game::mapinit() {
-	int y, x, i;
+	do {
+		h = 7 + GetRand(5);
+		w = 7 + GetRand(5);
+	} while (h*w < 80);
 
-	//h = 6 + GetRand(7 - 1);
-	h = 12;
-	//w = 6 + GetRand(7 - 1);
-	w = 12;
-	rep(y, (h + 1) / 2) rep(x, (w + 1) / 2)
-		scoreMap[y][x] = GetRand(16 - 1) + 1;
-	rep(y, (h + 1) / 2) rep(x, (w + 1) / 2)
-		if (GetRand(100 - 1) < 20) scoreMap[y][x] = -(GetRand(17 - 1));
-	rep(y, h) {
-		rep(x, w) {
-			int fromY = (y >= (h + 1) / 2) ? h - 1 - y : y;
-			int fromX = (x >= (w + 1) / 2) ? w - 1 - x : x;
+	bool isVertical;
+	bool isHorizontal;
+
+	do {
+		isVertical = GetRand(1);
+		isHorizontal = GetRand(1);
+	} while (!isVertical && !isHorizontal);
+	int _w, _h;
+	_w = (isHorizontal) ? (w + 1) / 2 : w;
+	_h = (isVertical) ? (h + 1) / 2 : h;
+	for (int y = 0; y < _h; y++) for (int x = 0; x < _w; x++) {
+		if (GetRand(99) < 10) scoreMap[y][x] = -(GetRand(15) - 1);
+		else scoreMap[y][x] = GetRand(16);
+	}
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
+			int fromY = (y >= _h) ? h - 1 - y : y;
+			int fromX = (x >= _w) ? w - 1 - x : x;
 			scoreMap[y][x] = scoreMap[fromY][fromX];
 		}
 	}
-	rep(i, 2) rep(y, h) rep(x, w) isJinti[i][y][x] = false;
+	for (int i = 0; i < 2; i++)
+		for (int y = 0; y < h; y++)
+			for (int x = 0; x < w; x++) isJinti[i][y][x] = false;
+
 	int startY = GetRand((h / 2) - 1);
 	int startX = GetRand((w / 2) - 1);
 	players[0] = Player(startY, startX, 0);
 	players[1] = Player(h - 1 - startY, w - 1 - startX, 0);
 	players[2] = Player(startY, w - 1 - startX, 1);
 	players[3] = Player(h - 1 - startY, startX, 1);
-	rep(i, 4) isJinti[players[i].teamId][players[i].y][players[i].x] = true;
+	for (int i = 0; i < 4; i++)
+		isJinti[players[i].teamId][players[i].y][players[i].x] = true;
 	calcPoint(isJinti, scoreMap, h, w, tilePoints, areaPoints);
 }
 
 
 void Game::action() {
-	int i, j;
+	/*
+	Q103. 自分チームのタイルを除去の対象にした時、そのタイルが相手チームの除去の対象になっている場合は、どうなるのでしょうか？
+	A103. 同じターンで複数のエージェントが同じマスをタイル除去に指定した場合，両チームの意思表示は無効となります。
+	*/
 	int dy[9] = { -1, -1, 0, 1, 1, 1, 0, -1 ,0 };
 	int dx[9] = { 0, 1, 1, 1, 0, -1, -1, -1 ,0 };
 	bool isOk[4];
 
 	//行動可能なプレイヤを検索する
-	rep(i, 4) {
+	for (int i = 0; i < 4; i++) {
 		isOk[i] = false;
 		if (dirs[i] == NONE) continue;	//何もしない
 		int next_y = players[i].y + dy[dirs[i]];
@@ -162,7 +175,7 @@ void Game::action() {
 		//アクション先が相手の陣地以外なら移動
 		if (!isJinti[!players[i].teamId][next_y][next_x]) {
 			bool isMove = true;
-			rep(j, 4) {
+			for (int j = 0; j < 4; j++) {
 				if (j == i) continue;
 				int ny, nx;
 				ny = players[j].y + dy[dirs[j]];
@@ -183,7 +196,7 @@ void Game::action() {
 		else {
 			//除去しようとしたマスに次のターン相手が移動する or 留まったままでいる場合は、ダメ
 			bool isErase = true;
-			rep(j, 4) {
+			for (int j = 0; j < 4; j++) {
 				if (players[j].teamId == players[i].teamId) continue;
 				int ny, nx;
 				ny = players[j].y + dy[dirs[j]];
@@ -195,7 +208,7 @@ void Game::action() {
 	}
 
 	//実際に行動する
-	rep(i, 4) {
+	for (int i = 0; i < 4; i++) {
 		if (!isOk[i]) { continue; }
 
 		int next_y = players[i].y + dy[dirs[i]];

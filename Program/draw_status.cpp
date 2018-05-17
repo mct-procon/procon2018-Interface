@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "DxLib.h"
+#include <string>
 
 /*namespace {
 	int bigFont;
