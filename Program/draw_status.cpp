@@ -7,13 +7,14 @@
 }
 
 void drawStatusInit() {
-	bigFont=CreateFontToHandle(NULL, 32, -1, DX_FONTTYPE_NORMAL);
+	bigFont=CreateFontToHandle(NULL, 64, -1, DX_FONTTYPE_NORMAL);
 }*/
-void drawVector(int x, int y, DIRECTION dir, int charaNum);
+
+void drawVector(int x, int y, MOVE move, int charaNum);
 
 void drawStatus(
 	int actionFrameCount, int timeLimit,
-	int nowTurn, int allTurn, DIRECTION dirs[],
+	int nowTurn, int allTurn, MOVE moves[],
 	int tilePoints[], int areaPoints[]) {
 	int c_black = 0;
 	//時間
@@ -24,9 +25,9 @@ void drawStatus(
 		, nowTurn, allTurn);
 	//ポイント
 	for (int i = 0; i < 2; i++) {
-		DrawFormatString(10 + i * 620, 10, c_black,
+		DrawFormatString(30 + i * 580, 30, c_black,
 			"タイルポイント\n領域ポイント\n合計");
-		DrawFormatString(130 + i * 620, 10, c_black,
+		DrawFormatString(150 + i * 580, 30, c_black,
 			":%d\n:%d\n:%d\n"
 			, tilePoints[i], areaPoints[i], tilePoints[i] + areaPoints[i]);
 	}
@@ -36,13 +37,13 @@ void drawStatus(
 	int vectorX[4] = { tx,tx,800 - tx,800 - tx };
 	int vectorY[4] = { ty,150 + ty,ty,150 + ty };
 	for (int i = 0; i < 4; i++) {
-		drawVector(vectorX[i], vectorY[i], dirs[i], i);
+		drawVector(vectorX[i], vectorY[i], moves[i], i);
 	}
 	//ボタン説明
 	DrawFormatString(314, 620, c_black, "R:リセット,ESC:終了");
 }
 
-void drawVector(int x, int y, DIRECTION dir, int charaNum) {
+void drawVector(int x, int y, MOVE move, int charaNum) {
 	int c_gray = GetColor(128, 128, 128);
 	int c_black = 0;
 	int c_blue = GetColor(0, 0, 106);
@@ -54,9 +55,9 @@ void drawVector(int x, int y, DIRECTION dir, int charaNum) {
 	int culsorX, culsorY;
 	int dx[9] = { 0, 1, 1, 1, 0, -1, -1, -1,0 };
 	int dy[9] = { -1, -1, 0, 1, 1, 1, 0, -1,0 };
-	int culsorRange = (dir % 2 == 0 ? 40 : (int)(40 / 1.41));
-	culsorX = dx[(int)dir] * culsorRange + x;
-	culsorY = dy[(int)dir] * culsorRange + y;
+	int culsorRange = (move.dir % 2 == 0 ? 40 : (int)(40 / 1.41));
+	culsorX = dx[(int)move.dir] * culsorRange + x;
+	culsorY = dy[(int)move.dir] * culsorRange + y;
 	int culsorColor = (charaNum < 2 ? c_blue : c_red);
 	DrawCircleAA((float)culsorX, (float)culsorY, 16, 32, culsorColor, TRUE);
 	//もじ

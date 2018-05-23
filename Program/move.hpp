@@ -11,3 +11,8 @@ enum DIRECTION {
 	LU,		//y-- x--
 	NONE,   //ˆÚ“®‚È‚µ
 };
+
+struct MOVE {
+	DIRECTION dir;
+	bool isEraseMine;
+};

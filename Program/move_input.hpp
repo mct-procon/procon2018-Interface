@@ -1,3 +1,3 @@
 #pragma once
 #include "move.hpp"
-void moveInput(DIRECTION dirs[]);
+void moveInput(MOVE moves[]);

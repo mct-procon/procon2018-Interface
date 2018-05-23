@@ -18,6 +18,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR arg, int) {
 		}
 		game.draw();
 	}
+
+	WSACleanup();
 	DxLib_End();
 	return 0;
 }
@@ -26,6 +28,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR arg, int) {
 void dxlibInit() {
 	SetGraphMode(800, 640, 32);
 	SetBackgroundColor(255, 255, 255);
+	SetAlwaysRunFlag(TRUE);
 	ChangeWindowMode(TRUE);
 	DxLib_Init();
 	SetDrawScreen(DX_SCREEN_BACK);
