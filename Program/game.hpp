@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.hpp"
 #include "move.hpp"
 
 class Game {
@@ -13,7 +12,7 @@ class Game {
 	int h, w;	//フィールドの大きさ。どちらも2以上
 	int scoreMap[12][12];
 	bool isJinti[2][12][12];	//isJinti[teamId(0, 1)][y][x] = チームteamIdの陣地か？
-	Move moves[4];
+	MOVE moves[4];
 	Player players[4];			//players[0], [1] … チーム0, players[2], [3] … チーム1
 	int nowTurn, allTurn;
 	int actionFrameCount;

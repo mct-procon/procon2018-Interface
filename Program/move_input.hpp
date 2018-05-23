@@ -1,3 +1,3 @@
 #pragma once
 #include "move.hpp"
-void moveInput(Move moves[]);
+void moveInput(MOVE moves[]);

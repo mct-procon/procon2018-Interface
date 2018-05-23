@@ -1,8 +1,4 @@
-//各プレイヤーが示すコマンド
-
 #pragma once
-#include "stdafx.hpp"
-
 //U == 0, RU == 1, …
 enum DIRECTION {
 	U,		//y--
@@ -13,16 +9,10 @@ enum DIRECTION {
 	DL,		//y++ x--
 	L,		//    x--
 	LU,		//y-- x--
+	NONE,   //移動なし
 };
 
-enum ACTION {
-	NONE,
-	MOVE,
-	ERASE,
-};
-
-struct Move {
+struct MOVE {
 	DIRECTION dir;
-	ACTION action;
-	Move() { dir = U; action = NONE; }
+	bool isEraseMine;
 };
