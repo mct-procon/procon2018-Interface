@@ -1,0 +1,42 @@
+﻿<Window x:Class="Interface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Interface"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <!--x:Key の指定が必須 -->
+        <SolidColorBrush x:Key="Brush1" Color="Green" />
+        <!--<Style TargetType="StackPanel">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightBlue" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>-->
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Ellipse Fill="{TemplateBinding Background}" Width="480" Height="230"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Background="#FFCCCCCC">
+        <StackPanel>
+            <DataGrid ItemsSource="{Binding コンテンツ}"
+            IsSynchronizedWithCurrentItem="True" Height="124" Margin="0,0,558,0" />
+            <TextBlock Text="{Binding コンテンツ/タイトル}" 
+            Margin="0,0,558,0" RenderTransformOrigin="0.47,4.827" Height="54"  />
+            <TextBox x:Name="textValue" />
+            <Slider Value="{Binding ElementName=textValue, Path=Text}" />
+        </StackPanel>
+    </Grid>
+
+</Window>

@@ -61,19 +61,19 @@ int main()
 			system("cls");
 			cout << "あなたはプレイヤー" << buf << "です。" << endl;
 			cout << "指示を入力してください\n" << endl;
-			cout << "エージェント番号(1~2):" << endl;
+			cout << "エージェント番号(1~2):";
 			cin >> eNum;
 			if (eNum != 1 && eNum != 2) {
 				errorMessage();
 				continue;
 			}
-			cout << "方向(0~8):" << endl;
+			cout << "方向(0~8):";
 			cin >> dir;
 			if (!(dir >= 0 && dir <= 8)) {
 				errorMessage();
 				continue;
 			}
-			cout << "自タイル除去(0:しない,1:する):" << endl;
+			cout << "自タイル除去(0:しない,1:する):";
 			cin >> isEraseMine;
 			if (isEraseMine != 0 && isEraseMine != 1) {
 				errorMessage();
