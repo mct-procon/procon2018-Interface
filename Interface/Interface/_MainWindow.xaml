@@ -36,6 +36,13 @@
     </Grid>-->
 
     <Grid x:Name="massGrid" ShowGridLines="True">
-        <local:MassUserControl></local:MassUserControl>
+        <ItemsControl ItemsSource="{Binding testData}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:DisplayGridData />
+                    
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Window>

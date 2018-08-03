@@ -15,24 +15,21 @@ using System.Windows.Shapes;
 
 namespace Interface
 {
-    /// <summary>
-    /// MainWindow.xaml の相互作用ロジック
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MassUserControl : UserControl
     {
-        public MainWindow()
+        public MassUserControl()
         {
             InitializeComponent();
-            this.DataContext = new
-            {
-                管理者 = new[] { new { 姓 = "岩永", 名 = "信之" } },
-                コンテンツ = new[]
-                {
-                    new { タイトル = "C# 入門", URL = "csharp" },
-                    new { タイトル = "信号処理", URL = "dsp" },
-                    new { タイトル = "力学", URL = "dynamics" },
-                }
-            };
+
+            var viewmodel = new ViewModel();
+            this.DataContext = viewmodel;
+            
+            for (int i = 0; i < viewmodel.MassHeight; i++) ;
+                massGrid.RowDefinitions.Add(new RowDefinition());
+            for (int i = 0; i < viewmodel.MassWidth; i++) ;
+                massGrid.Definitions.Add(new RowDefinition());
+
+
         }
     }
 }
