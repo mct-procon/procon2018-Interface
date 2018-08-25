@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameInterface.Cells;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -151,7 +152,7 @@ namespace GameInterface
                 agents[i].Point = new Point(agentsX[i], agentsY[i]);
                 CellData[agentsY[i]][agentsX
                     [i]].AreaState_ =
-                    i / Constants.PlayersNum == 0 ? Cell.AreaState.AREA_1P : Cell.AreaState.AREA_2P;
+                    i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
             }
         }
         void InitGameData(MainWindowViewModel _viewModel)

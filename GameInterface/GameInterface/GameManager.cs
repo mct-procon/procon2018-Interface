@@ -74,7 +74,7 @@ namespace GameInterface
                 Agent agent = data.Agents[i];
                 Point nextP = agent.GetNextPoint();
                 if (CheckIsPointInBoard(nextP) == false) continue;
-                Cell.AreaState nextAreaState = data.CellData[nextP.Y][nextP.X].AreaState_;
+                TeamColor nextAreaState = data.CellData[nextP.Y][nextP.X].AreaState_;
                 ActionAgentToNextP(i, agent, nextP, nextAreaState);
                 viewModel.IsRemoveMode[i] = false;
             }
@@ -88,7 +88,7 @@ namespace GameInterface
             viewModel.PlayerScores = data.PlayerScores;
         }
 
-        private void ActionAgentToNextP(int i, Agent agent, Point nextP, Cell.AreaState nextAreaState)
+        private void ActionAgentToNextP(int i, Agent agent, Point nextP, TeamColor nextAreaState)
         {
             switch (agent.AgentState)
             {
@@ -96,31 +96,31 @@ namespace GameInterface
                     switch (agent.playerNum)
                     {
                         case 0:
-                            if (nextAreaState != Cell.AreaState.AREA_2P)
+                            if (nextAreaState != TeamColor.Area2P)
                             {
                                 data.Agents[i].Point = nextP;
-                                data.CellData[nextP.Y][nextP.X].AreaState_ = Cell.AreaState.AREA_1P;
+                                data.CellData[nextP.Y][nextP.X].AreaState_ = TeamColor.Area1P;
                             }
                             else
                             {
-                                data.CellData[nextP.Y][nextP.X].AreaState_ = Cell.AreaState.FREE;
+                                data.CellData[nextP.Y][nextP.X].AreaState_ = TeamColor.Free;
                             }
                             break;
                         case 1:
-                            if (nextAreaState != Cell.AreaState.AREA_1P)
+                            if (nextAreaState != TeamColor.Area1P)
                             {
                                 data.Agents[i].Point = nextP;
-                                data.CellData[nextP.Y][nextP.X].AreaState_ = Cell.AreaState.AREA_2P;
+                                data.CellData[nextP.Y][nextP.X].AreaState_ = TeamColor.Area2P;
                             }
                             else
                             {
-                                data.CellData[nextP.Y][nextP.X].AreaState_ = Cell.AreaState.FREE;
+                                data.CellData[nextP.Y][nextP.X].AreaState_ = TeamColor.Free;
                             }
                             break;
                     }
                     break;
                 case Agent.State.REMOVE_TILE:
-                    data.CellData[nextP.Y][nextP.X].AreaState_ = Cell.AreaState.FREE;
+                    data.CellData[nextP.Y][nextP.X].AreaState_ = TeamColor.Free;
                     break;
                 default:
                     break;

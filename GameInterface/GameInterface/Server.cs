@@ -94,9 +94,9 @@ namespace GameInterface
             {
                 for (int j = 0; j < data.BoardWidth; j++)
                 {
-                    if (data.CellData[i][j].AreaState_ == Cell.AreaState.AREA_1P)
+                    if (data.CellData[i][j].AreaState_ == TeamColor.Area1P)
                         colorBoardMe[(uint)i, (uint)j] = true;
-                    else if (data.CellData[i][j].AreaState_ == Cell.AreaState.AREA_2P)
+                    else if (data.CellData[i][j].AreaState_ == TeamColor.Area2P)
                         colorBoardEnemy[(uint)i, (uint)j] = true;
                 }
             }

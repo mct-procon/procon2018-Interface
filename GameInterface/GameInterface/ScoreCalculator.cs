@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using GameInterface.Cells;
 
 namespace GameInterface
 {
@@ -19,7 +20,7 @@ namespace GameInterface
             int score = 0;
             height = height_;
             width = width_;
-            var state = playerNum == 0 ? Cell.AreaState.AREA_1P : Cell.AreaState.AREA_2P;
+            var state = playerNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GameInterface
+namespace GameInterface.Cells
 {
     /// <summary>
     /// CellUserControl.xaml の相互作用ロジック

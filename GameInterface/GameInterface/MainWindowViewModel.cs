@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Windows;
+using GameInterface.Cells;
 
 namespace GameInterface
 {

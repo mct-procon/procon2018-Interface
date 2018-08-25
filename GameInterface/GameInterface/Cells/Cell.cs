@@ -4,23 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameInterface
+namespace GameInterface.Cells
 {
     public class Cell : ViewModelBase
     {
-        public enum AreaState { FREE, AREA_1P, AREA_2P };
         private int score;
         public int Score
         {
             get => score; 
             set => RaisePropertyChanged(ref score, value);
         }
-        private AreaState areaState = AreaState.FREE;
-        public AreaState AreaState_
+
+        private TeamColor areaState = TeamColor.Free;
+        public TeamColor AreaState_
         {
             get => areaState;
             set => RaisePropertyChanged(ref areaState, value);
         }
+
+        private TeamColor agentState = TeamColor.Free;
+        public TeamColor AgentState 
+        {
+            get => agentState;
+            set => RaisePropertyChanged(ref agentState, value);
+        }
+
         public Cell() { }
         public Cell(int _score)
         {
