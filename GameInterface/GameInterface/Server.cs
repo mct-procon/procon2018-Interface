@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MCTProcon29Protocol.Methods;
+using MCTProcon29Protocol;
 
 namespace GameInterface
 {
@@ -56,6 +57,11 @@ namespace GameInterface
             managers[0].Start(15000);
             managers[1].Start(15001);
             data = gameManager.data;
+            App.Current.Exit += (obj, e) =>
+            {
+                foreach (var man in managers)
+                    man.ShutdownServer();
+            };
         }
 
         public void SendGameInit(int playerNum)
@@ -68,63 +74,46 @@ namespace GameInterface
                     board[i, j] = (sbyte)data.CellData[i][j].Score;
                 }
             }
-            managers[playerNum].Write(DataKind.GameInit, new GameInit()
-            {
-                TeamId = (byte)playerNum,
-                BoardHeight = (byte)data.BoardHeight,
-                BoardWidth = (byte)data.BoardWidth,
-                Board = board,
-                MeAgent1 = new MCTProcon29Protocol.Point((uint)data.Agents[0 + playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
-                MeAgent2 = new MCTProcon29Protocol.Point((uint)data.Agents[1 + playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
-                EnemyAgent1 = new MCTProcon29Protocol.Point((uint)data.Agents[2 - playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
-                EnemyAgent2 = new MCTProcon29Protocol.Point((uint)data.Agents[3 - playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
-                Turns = GameData.FINISH_TURN,
-            });
+            managers[playerNum].Write(DataKind.GameInit, new GameInit((byte)data.BoardHeight, (byte)data.BoardWidth, board,
+                new MCTProcon29Protocol.Point((uint)data.Agents[0 + playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
+                new MCTProcon29Protocol.Point((uint)data.Agents[1 + playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
+                new MCTProcon29Protocol.Point((uint)data.Agents[2 - playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
+                new MCTProcon29Protocol.Point((uint)data.Agents[3 - playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
+                GameData.FINISH_TURN));
             isConnected[playerNum] = true;
         }
 
         public void SendTurnStart(int playerNum)
         {
             if (!isConnected[playerNum]) return;
-            ushort[] colorBoardMe = new ushort[data.BoardHeight];
-            ushort[] colorBoardEnemy = new ushort[data.BoardHeight];
+
+            ColoredBoardSmallBigger colorBoardMe = new ColoredBoardSmallBigger();
+            ColoredBoardSmallBigger colorBoardEnemy = new ColoredBoardSmallBigger();
+
             for (int i = 0; i < data.BoardHeight; i++)
             {
                 for (int j = 0; j < data.BoardWidth; j++)
                 {
                     if (data.CellData[i][j].AreaState_ == Cell.AreaState.AREA_1P)
-                        colorBoardMe[i] += (ushort)(1 << j);
-                }
-            }
-            for (int i = 0; i < data.BoardHeight; i++)
-            {
-                for (int j = 0; j < data.BoardWidth; j++)
-                {
-                    if (data.CellData[i][j].AreaState_ == Cell.AreaState.AREA_2P)
-                        colorBoardEnemy[i] += (ushort)(1 << j);
+                        colorBoardMe[(uint)i, (uint)j] = true;
+                    else if (data.CellData[i][j].AreaState_ == Cell.AreaState.AREA_2P)
+                        colorBoardEnemy[(uint)i, (uint)j] = true;
                 }
             }
             if (playerNum == 1) Swap(ref colorBoardMe, ref colorBoardEnemy);
-            managers[playerNum].Write(DataKind.TurnStart, new TurnStart
-            {
-                Turn = (byte)data.NowTurn,
-                WaitMiliSeconds = GameData.TIME_LIMIT_SECOND * 1000,
-                MeAgent1 = new MCTProcon29Protocol.Point((uint)data.Agents[0 + playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
-                MeAgent2 = new MCTProcon29Protocol.Point((uint)data.Agents[1 + playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
-                EnemyAgent1 = new MCTProcon29Protocol.Point((uint)data.Agents[2 - playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
-                EnemyAgent2 = new MCTProcon29Protocol.Point((uint)data.Agents[3 - playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
-                MeColoredBoard = colorBoardMe,
-                EnemyColoredBoard = colorBoardEnemy,
-            });
+            managers[playerNum].Write(DataKind.TurnStart, new TurnStart((byte)data.NowTurn, GameData.TIME_LIMIT_SECOND,
+                new MCTProcon29Protocol.Point((uint)data.Agents[0 + playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
+                new MCTProcon29Protocol.Point((uint)data.Agents[1 + playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
+                new MCTProcon29Protocol.Point((uint)data.Agents[2 - playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
+                new MCTProcon29Protocol.Point((uint)data.Agents[3 - playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
+                colorBoardMe,
+                colorBoardEnemy));
         }
 
         public void SendTurnEnd(int playerNum)
         {
             if (!isConnected[playerNum]) return;
-            managers[playerNum].Write(DataKind.TurnEnd, new TurnEnd()
-            {
-                Turn = (byte)data.NowTurn,
-            });
+            managers[playerNum].Write(DataKind.TurnEnd, new TurnEnd((byte)data.NowTurn));
         }
 
         private void Swap<T>(ref T lhs, ref T rhs)

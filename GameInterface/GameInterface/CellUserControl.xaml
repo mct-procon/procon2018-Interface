@@ -6,25 +6,20 @@
              xmlns:local="clr-namespace:GameInterface"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <StackPanel>
-            <StackPanel.Style>
-                <Style TargetType="StackPanel">
-                    <Setter Property="Background" Value="LightGray" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid},
-             Path=DataContext.AreaState_}" Value="{x:Static local:Cell+AreaState.AREA_1P}">
-                            <Setter Property="Background" Value="LightBlue" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid},
-             Path=DataContext.AreaState_}" Value="{x:Static local:Cell+AreaState.AREA_2P}">
-                            <Setter Property="Background" Value="LightPink" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </StackPanel.Style>
-        </StackPanel>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid},
-             Path=DataContext.Score}" FontSize="20"/>
-    </Grid>
+    <Border>
+        <Border.Style>
+            <Style TargetType="Border">
+                <Setter Property="Background" Value="LightGray" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding AreaState_}" Value="{x:Static local:Cell+AreaState.AREA_1P}">
+                        <Setter Property="Background" Value="LightBlue" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding AreaState_}" Value="{x:Static local:Cell+AreaState.AREA_2P}">
+                        <Setter Property="Background" Value="LightPink" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Score}" FontSize="20"/>
+    </Border>
 </UserControl>
