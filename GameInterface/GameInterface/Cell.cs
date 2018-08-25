@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameInterface
 {
-    public class Cell : ViewModelsBase
+    public class Cell : ViewModelBase
     {
         public enum AreaState { FREE, AREA_1P, AREA_2P };
         private int score;

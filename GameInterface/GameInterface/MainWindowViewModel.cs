@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace GameInterface
 {
-    public class MainWindowViewModel : ViewModelsBase
+    public class MainWindowViewModel : ViewModelBase
     {
         public GameManager gameManager;
         //---------------------------------------

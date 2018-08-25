@@ -73,7 +73,7 @@
     <Compile Include="Order.cs" />
     <Compile Include="ScoreCalculator.cs" />
     <Compile Include="Server.cs" />
-    <Compile Include="ViewModelsBase.cs" />
+    <Compile Include="ViewModelBase.cs" />
     <Page Include="CellUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
