@@ -13,27 +13,18 @@ namespace GameInterface
         public int Score
         {
             get => score; 
-            set
-            {
-                score = value;
-                RaisePropertyChanged("Score");
-            }
+            set => RaisePropertyChanged(ref score, value);
         }
-        private AreaState areaState;
+        private AreaState areaState = AreaState.FREE;
         public AreaState AreaState_
         {
-            get => areaState; 
-            set
-            {
-                areaState = value;
-                RaisePropertyChanged("AreaState_");
-            }
+            get => areaState;
+            set => RaisePropertyChanged(ref areaState, value);
         }
         public Cell() { }
         public Cell(int _score)
         {
             Score = _score;
         }
-
     }
 }
