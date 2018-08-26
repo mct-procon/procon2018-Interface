@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GameInterface"
         xmlns:cellLocal="clr-namespace:GameInterface.Cells"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        Title="MainWindow" Height="600" Width="1000" MinHeight="600" MinWidth="1000">
     <Window.Resources>
         <ResourceDictionary Source="Styles.xaml"/>
     </Window.Resources>
