@@ -39,7 +39,6 @@ namespace GameInterface
                 UpdateOrderButton();
                 RaisePropertyChanged();
                 RaisePropertyChanged("Point");
-                //RaisePropertyChanged("CellData");
             }
         }
         public OrderButtonUserControl[,] orderButtonUserControls = new OrderButtonUserControl[4, 9];
