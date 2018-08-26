@@ -66,12 +66,12 @@ namespace GameInterface
 
         public void SendGameInit(int playerNum)
         {
-            sbyte[,] board = new sbyte[data.BoardHeight, data.BoardWidth];
-            for (int i = 0; i < data.BoardHeight; i++)
+            sbyte[,] board = new sbyte[data.BoardWidth, data.BoardHeight];
+            for (int i = 0; i < data.BoardWidth; i++)
             {
-                for (int j = 0; j < data.BoardWidth; j++)
+                for (int j = 0; j < data.BoardHeight; j++)
                 {
-                    board[i, j] = (sbyte)data.CellData[i][j].Score;
+                    board[i, j] = (sbyte)data.CellData[i, j].Score;
                 }
             }
             managers[playerNum].Write(DataKind.GameInit, new GameInit((byte)data.BoardHeight, (byte)data.BoardWidth, board,
@@ -90,13 +90,13 @@ namespace GameInterface
             ColoredBoardSmallBigger colorBoardMe = new ColoredBoardSmallBigger();
             ColoredBoardSmallBigger colorBoardEnemy = new ColoredBoardSmallBigger();
 
-            for (int i = 0; i < data.BoardHeight; i++)
+            for (int i = 0; i < data.BoardWidth; i++)
             {
-                for (int j = 0; j < data.BoardWidth; j++)
+                for (int j = 0; j < data.BoardHeight; j++)
                 {
-                    if (data.CellData[i][j].AreaState_ == TeamColor.Area1P)
+                    if (data.CellData[i, j].AreaState_ == TeamColor.Area1P)
                         colorBoardMe[(uint)i, (uint)j] = true;
-                    else if (data.CellData[i][j].AreaState_ == TeamColor.Area2P)
+                    else if (data.CellData[i, j].AreaState_ == TeamColor.Area2P)
                         colorBoardEnemy[(uint)i, (uint)j] = true;
                 }
             }

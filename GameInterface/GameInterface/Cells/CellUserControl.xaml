@@ -9,17 +9,32 @@
     <UserControl.Resources>
         <Style TargetType="Border">
             <Setter Property="BorderBrush" Value="LightGray" />
+            <Setter Property="Background" Value="White"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding AreaState_}" Value="{x:Static local:Cell+AreaState.AREA_1P}">
+                <DataTrigger Binding="{Binding AreaState_}" Value="{x:Static local:TeamColor.Area1P}">
                     <Setter Property="BorderBrush" Value="Blue" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AreaState_}" Value="{x:Static local:Cell+AreaState.AREA_2P}">
+                <DataTrigger Binding="{Binding AreaState_}" Value="{x:Static local:TeamColor.Area2P}">
                     <Setter Property="BorderBrush" Value="Red" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AgentState}" Value="{x:Static local:TeamColor.Area1P}">
+                    <Setter Property="Background" Value="Blue" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AgentState}" Value="{x:Static local:TeamColor.Area2P}">
+                    <Setter Property="Background" Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding AgentState}" Value="{x:Static local:TeamColor.Free}">
+                    <Setter Property="Foreground" Value="Black"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Border BorderThickness="8">
+    <Border BorderThickness="5">
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Score}" FontSize="20"/>
     </Border>
 </UserControl>

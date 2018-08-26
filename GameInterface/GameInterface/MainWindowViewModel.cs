@@ -11,19 +11,14 @@ namespace GameInterface
         public GameManager gameManager;
         //---------------------------------------
         //画面に表示する変数
-        private List<Cell>[] cellData = new List<Cell>[12];
-        public List<Cell>[] CellData
+        private Cell[,] cellData = new Cell[12,12];
+        public Cell[,] CellData
         {
-            get => cellData; 
-            set
-            {
-                cellData = value;
-                RaisePropertyChanged("CellData");
-                RaisePropertyChanged("AreaState_");
-            }
+            get => cellData;
+            set => RaisePropertyChanged(ref cellData, value);
         }
-        private String timerStr;
-        public String TimerStr
+        private string timerStr;
+        public string TimerStr
         {
             get => timerStr; 
             set
@@ -42,8 +37,9 @@ namespace GameInterface
             {
                 agents = value;
                 UpdateOrderButton();
-                RaisePropertyChanged("Agents");
+                RaisePropertyChanged();
                 RaisePropertyChanged("Point");
+                //RaisePropertyChanged("CellData");
             }
         }
         public OrderButtonUserControl[,] orderButtonUserControls = new OrderButtonUserControl[4, 9];
@@ -54,7 +50,7 @@ namespace GameInterface
             set
             {
                 playerScores = value;
-                RaisePropertyChanged("PlayerScores");
+                RaisePropertyChanged();
             }
         }
         private bool[] isRemoveMode =new bool[4];
@@ -62,15 +58,11 @@ namespace GameInterface
             get => isRemoveMode;
             set => isRemoveMode = value;
         }
-        private String turnStr;
-        public String TurnStr
+        private string turnStr;
+        public string TurnStr
         {
             get => turnStr;
-            set
-            {
-                turnStr = value;
-                RaisePropertyChanged("TurnStr");
-            }
+            set => RaisePropertyChanged(ref turnStr, value);
         }
         //---------------------------------------
         //ボタン等を押された時の関数

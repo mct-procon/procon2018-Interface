@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using GameInterface.Cells;
+using System.Collections.Generic;
 
 namespace GameInterface
 {
@@ -37,6 +38,20 @@ namespace GameInterface
             int boardHeight = data.BoardHeight;
             int boardWidth = data.BoardWidth;
 
+            // Clear before game.
+            cellGrid.RowDefinitions.Clear();
+            cellGrid.ColumnDefinitions.Clear();
+
+            List<Cells.CellUserControl> cells = new List<CellUserControl>();
+            foreach(var ctrl in cellGrid.Children)
+            {
+                if (ctrl is Cells.CellUserControl)
+                    cells.Add((Cells.CellUserControl)ctrl);
+            }
+            foreach (var ctrl in cells)
+                cellGrid.Children.Remove(ctrl);
+            // end
+
             //Gridに列、行を追加
             for (int i = 0; i < boardHeight; i++)
                 cellGrid.RowDefinitions.Add(new RowDefinition());
@@ -44,15 +59,15 @@ namespace GameInterface
                 cellGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
             //i行目のj列目にテキストを追加
-            for (int i = 0; i < boardHeight; i++)
+            for (int i = 0; i < boardWidth; i++)
             {
-                for (int j = 0; j < boardWidth; j++)
+                for (int j = 0; j < boardHeight; j++)
                 {
-                    var massUserControl = new CellUserControl();
-                    massUserControl.DataContext = data.CellData[i][j];
-                    cellGrid.Children.Add(massUserControl);
-                    Grid.SetRow(massUserControl, i);
-                    Grid.SetColumn(massUserControl, j);
+                    var cellUserControl = new CellUserControl();
+                    cellUserControl.DataContext = data.CellData[i, j];
+                    cellGrid.Children.Add(cellUserControl);
+                    Grid.SetRow(cellUserControl, j);
+                    Grid.SetColumn(cellUserControl, i);
                 }
             }
         }
@@ -92,6 +107,11 @@ namespace GameInterface
             const int BUTTON_SPACE_RANGE = 3;
             int column = buttonId % BUTTON_SPACE_RANGE + BUTTON_MARGIN_LEFT;
             return column;
+        }
+
+        private void BreakButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debugger.Break();
         }
     }
 }

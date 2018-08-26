@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameInterface"
+        xmlns:cellLocal="clr-namespace:GameInterface.Cells"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
-    <Grid Background="DarkGray">
+    <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="1.25*" />
-            <ColumnDefinition Width="1.25*" />
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="1.5*" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -30,14 +31,15 @@
 
         <TextBlock x:Name="text1" Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding TimerStr}" FontSize="36"/>
         <TextBlock x:Name="text2" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding TurnStr}" FontSize="36"/>
+        <Button x:Name="BreakButton" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" Content="DEBUG" Click="BreakButton_Click"/>
 
         <Grid x:Name="player1Grid" Grid.Row="2" Grid.Column="0" Background="MediumSlateBlue">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="10"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
@@ -58,55 +60,40 @@
             <CheckBox Content="タイル除去モード" IsChecked="{Binding IsRemoveMode[1]}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3"/>
         </Grid>
 
-        <Grid x:Name="cellGrid" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="1" ShowGridLines="True">
-            <Ellipse 
-                Fill="AliceBlue" Opacity="0.7"
-                Grid.Column="{Binding Agents[0].Point.X}" 
-                Grid.Row="{Binding Agents[0].Point.Y}" 
-                Grid.ZIndex="1" Stroke="Black" />
+        <Grid x:Name="cellGrid" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="1">
+            <Grid.Resources>
+                <Style TargetType="cellLocal:CellUserControl">
+                    <Setter Property="Margin" Value="2"/>
+                </Style>
+            </Grid.Resources>
             <TextBlock
-                Text="1" FontSize="15" TextDecorations="Underline" Foreground="DarkBlue"
-                Grid.Column="{Binding Agents[0].Point.X}" 
+                Text="1" FontSize="15" Background="White" Foreground="Blue" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Grid.Column="{Binding Agents[0].Point.X}" Margin="3,3,0,0"
                 Grid.Row="{Binding Agents[0].Point.Y}"  Grid.ZIndex="1" />
-            
-            <Ellipse 
-                Fill="AliceBlue" Opacity="0.7"
-                Grid.Column="{Binding Agents[1].Point.X}"
-                Grid.Row="{Binding Agents[1].Point.Y}"
-                Grid.ZIndex="1" Stroke="Black"/>
+
             <TextBlock
-                Text="2" FontSize="15" TextDecorations="Underline" Foreground="DarkBlue"
-                Grid.Column="{Binding Agents[1].Point.X}" 
+                Text="2" FontSize="15" Background="White" Foreground="Blue" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Grid.Column="{Binding Agents[1].Point.X}" Margin="3,3,0,0"
                 Grid.Row="{Binding Agents[1].Point.Y}"  Grid.ZIndex="1" />
-            
-            <Ellipse 
-                Fill="Pink" Opacity="0.7"
-                Grid.Column="{Binding Agents[2].Point.X}" 
-                Grid.Row="{Binding Agents[2].Point.Y}" 
-                Grid.ZIndex="1" Stroke="Black"/>
+
             <TextBlock
-                Text="1" FontSize="15" TextDecorations="Underline" Foreground="DarkRed"
-                Grid.Column="{Binding Agents[2].Point.X}" 
+                Text="1" FontSize="15" Background="White" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Grid.Column="{Binding Agents[2].Point.X}" Margin="3,3,0,0"
                 Grid.Row="{Binding Agents[2].Point.Y}"  Grid.ZIndex="1" />
-            
-            <Ellipse 
-                Fill="Pink"  Opacity="0.7"
-                Grid.Column="{Binding Agents[3].Point.X}" 
-                Grid.Row="{Binding Agents[3].Point.Y}" 
-                Grid.ZIndex="1" Stroke="Black"/>
+
             <TextBlock
-                Text="2" FontSize="15" TextDecorations="Underline" Foreground="DarkRed"
-                Grid.Column="{Binding Agents[3].Point.X}" 
+                Text="2" FontSize="15" Background="White" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Grid.Column="{Binding Agents[3].Point.X}" Margin="3,3,0,0"
                 Grid.Row="{Binding Agents[3].Point.Y}"  Grid.ZIndex="1" />
         </Grid>
 
         <Grid x:Name="player2Grid" Grid.Row="2" Grid.Column="3" Background="Crimson">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="10"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>

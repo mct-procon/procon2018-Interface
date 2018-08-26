@@ -17,8 +17,8 @@ namespace GameInterface
         private System.Random rand = new System.Random();
         //---------------------------------------
         //ViewModelと連動させるデータ(画面上に現れるデータ)
-        private List<Cell>[] cellDataValue = new List<Cell>[12];
-        public List<Cell>[] CellData
+        private Cell[,] cellDataValue = null;
+        public Cell[,] CellData
         {
             get => cellDataValue;
             private set
@@ -79,10 +79,9 @@ namespace GameInterface
 
         public GameData(MainWindowViewModel _viewModel)
         {
+            InitGameData(_viewModel);
             InitCellData();
             InitAgents();
-            InitGameData(_viewModel);
-
         }
         void InitCellData()
         {
@@ -107,28 +106,23 @@ namespace GameInterface
             randWidth = (isHorizontal) ? (BoardWidth + 1) / 2 : BoardWidth;
             randHeight = (isVertical) ? (BoardHeight + 1) / 2 : BoardHeight;
 
-            for (int i = 0; i < BoardHeight; i++)
+            CellData = new Cell[BoardWidth, BoardHeight];
+            for (int i = 0; i < BoardWidth; i++)
             {
-                //リストの配列は宣言時はNullだから、インスタンスを入れて初期化
-                CellData[i] = new List<Cell>();
-                for (int j = 0; j < BoardWidth; j++)
+                for (int j = 0; j < BoardHeight; j++)
                 {
-                    if (j < randWidth && i < randHeight)
+                    if (i < randWidth && j < randHeight)
                     {
                         //10%の確率で値を0以下にする
                         if (rand.Next(1, 100) > 10)
-                            CellData[i].Add(new Cell(rand.Next(1, 14)));
+                            CellData[i, j] = new Cell(rand.Next(1, 14));
                         else
-                            CellData[i].Add(new Cell(rand.Next(-14, 0)));
+                            CellData[i, j] = new Cell(rand.Next(-14, 0));
                     }
-                    else if (i >= randHeight)
-                    {
-                        CellData[i].Add(new Cell(CellData[BoardHeight - 1 - i][j].Score));
-                    }
+                    else if (j >= randHeight)
+                        CellData[i, j] = new Cell(CellData[i, BoardHeight - 1 - j].Score);
                     else
-                    {
-                        CellData[i].Add(new Cell(CellData[i][BoardWidth - 1 - j].Score));
-                    }
+                        CellData[i, j] = new Cell(CellData[BoardWidth - 1 - i, j].Score);
                 }
             }
         }
@@ -150,8 +144,10 @@ namespace GameInterface
             {
                 agents[i].playerNum = (i / Constants.PlayersNum);
                 agents[i].Point = new Point(agentsX[i], agentsY[i]);
-                CellData[agentsY[i]][agentsX
-                    [i]].AreaState_ =
+                CellData[agentsX[i], agentsY[i]].AreaState_ =
+                    i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+
+                CellData[agentsX[i], agentsY[i]].AgentState =
                     i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
             }
         }
