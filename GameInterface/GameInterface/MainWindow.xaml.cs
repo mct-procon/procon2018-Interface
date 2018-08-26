@@ -78,10 +78,12 @@ namespace GameInterface
             for (int i = 0; i < Constants.AgentsNum; i++)
             {
                 var currentGrid = i < 2 ? player1Grid : player2Grid;
+                var currentStyle = (Style)(i < 2 ? this.FindResource("BlueButton") : this.FindResource("RedButton"));
 
                 for (int j = 0; j < Constants.OrderButtonsNum; j++)
                 {
                     var orderButtonUserControl = new OrderButtonUserControl(i, j);
+                    ((FrameworkElement)orderButtonUserControl.Content).Style = currentStyle;
                     currentGrid.Children.Add(orderButtonUserControl);
                     Grid.SetRow(orderButtonUserControl, GetButtonSpaceRow(i, j));
                     Grid.SetColumn(orderButtonUserControl, GetButtonSpaceColumn(j));

@@ -7,6 +7,9 @@
         xmlns:cellLocal="clr-namespace:GameInterface.Cells"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
+    <Window.Resources>
+        <ResourceDictionary Source="Styles.xaml"/>
+    </Window.Resources>
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -43,11 +46,21 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Text="{Binding PlayerScores[0]}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom"/>
+            <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="18"/>
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Text="1P  "/>
+                <TextBlock Text="{Binding PlayerScores[0]}"/>
+                <TextBlock Text=" pts."/>
+            </StackPanel>
             <TextBlock Text="1p.エージェント1" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Foreground="White"/>
-            <CheckBox Content="タイル除去モード" IsChecked="{Binding IsRemoveMode[0]}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Foreground="White"/>
+            <ToggleButton Content="タイル除去モード" Height="30" IsChecked="{Binding IsRemoveMode[0]}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>
             <TextBlock Text="1p.エージェント2" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Foreground="White"/>
-            <CheckBox Content="タイル除去モード" IsChecked="{Binding IsRemoveMode[1]}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3" Foreground="White"/>
+            <ToggleButton Content="タイル除去モード" Height="30" IsChecked="{Binding IsRemoveMode[1]}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>
         </Grid>
 
         <Grid x:Name="cellGrid" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1">
@@ -97,11 +110,21 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Text="{Binding PlayerScores[1]}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom"/>
+            <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="18"/>
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Text="2P  "/>
+                <TextBlock Text="{Binding PlayerScores[1]}"/>
+                <TextBlock Text=" pts."/>
+            </StackPanel>
             <TextBlock Text="2p.エージェント1" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Foreground="White"/>
-            <CheckBox Content="タイル除去モード" IsChecked="{Binding IsRemoveMode[2]}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Foreground="White"/>
+            <ToggleButton Content="タイル除去モード" Height="30" IsChecked="{Binding IsRemoveMode[2]}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>
             <TextBlock Text="2p.エージェント2" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Foreground="White"/>
-            <CheckBox Content="タイル除去モード" IsChecked="{Binding IsRemoveMode[3]}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3" Foreground="White"/>
+            <ToggleButton Content="タイル除去モード" Height="30" IsChecked="{Binding IsRemoveMode[3]}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>
         </Grid>
 
     </Grid>

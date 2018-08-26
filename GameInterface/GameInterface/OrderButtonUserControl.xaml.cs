@@ -24,9 +24,9 @@ namespace GameInterface
     {
         public static MainWindowViewModel Viewmodel { get; set; }
         readonly string[] buttonText = new string[] {
-            "↖",   "↑",    "↗",
-            "←",   "・",  "→",
-            "↙",   "↓",    "↘",
+            "↖", "↑", "↗",
+            "←", "・", "→",
+            "↙", "↓", "↘",
         };
 
         readonly Agent.Direction[] buttonDir = new Agent.Direction[] {
