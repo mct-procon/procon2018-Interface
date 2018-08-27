@@ -19,25 +19,21 @@ namespace GameInterface
         public MainWindow()
         {
             InitializeComponent();
-            InitWindow();
-        }
-
-        void InitWindow()
-        {
             this.viewModel = new MainWindowViewModel();
             this.DataContext = this.viewModel;
             this.gameManager = new GameManager(viewModel);
             this.viewModel.gameManager = this.gameManager;
-            var data = this.gameManager.data;
-            CreateCellOnCellGrid(data);
             CreateOrderButtonsOnPlayerGrid();
         }
 
-        void CreateCellOnCellGrid(GameData data)
+        void InitGame()
         {
-            int boardHeight = data.BoardHeight;
-            int boardWidth = data.BoardWidth;
+            gameManager.InitGameData();
+            CreateCellOnCellGrid(gameManager.data.BoardWidth, gameManager.data.BoardHeight);
+        }
 
+        void CreateCellOnCellGrid(int boardWidth, int boardHeight)
+        {
             // Clear before game.
             cellGrid.RowDefinitions.Clear();
             cellGrid.ColumnDefinitions.Clear();
@@ -64,7 +60,7 @@ namespace GameInterface
                 for (int j = 0; j < boardHeight; j++)
                 {
                     var cellUserControl = new CellUserControl();
-                    cellUserControl.DataContext = data.CellData[i, j];
+                    cellUserControl.DataContext = gameManager.data.CellData[i, j];
                     cellGrid.Children.Add(cellUserControl);
                     Grid.SetRow(cellUserControl, j);
                     Grid.SetColumn(cellUserControl, i);
@@ -122,6 +118,11 @@ namespace GameInterface
                 if (!System.Diagnostics.Debugger.Launch())
                     return;
             System.Diagnostics.Debugger.Break();
+        }
+
+        private void NewGameMenu_Clicked(object sender, RoutedEventArgs e)
+        {
+            InitGame();
         }
     }
 }

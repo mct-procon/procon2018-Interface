@@ -27,7 +27,7 @@
         <Button x:Name="MenuButton" Grid.Column="3" HorizontalAlignment="Right" Content="MENU" Click="MenuButton_Click">
             <Button.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="新規ゲーム"/>
+                    <MenuItem Header="新規ゲーム" Click="NewGameMenu_Clicked"/>
                     <MenuItem Header="デバッグ情報"/>
                     <MenuItem Header="Break" Click="BreakMenu_Clicked"/>
                 </ContextMenu>

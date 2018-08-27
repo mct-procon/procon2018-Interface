@@ -79,10 +79,18 @@ namespace GameInterface
 
         public GameData(MainWindowViewModel _viewModel)
         {
-            InitGameData(_viewModel);
+            viewModel = _viewModel;
+        }
+
+        public void InitGameData()
+        {
+            TimerStr = "TIME:0/10";
+            TurnStr = "TURN:0/60";
+            SecondCount = 0;
             InitCellData();
             InitAgents();
         }
+
         void InitCellData()
         {
 
@@ -150,13 +158,6 @@ namespace GameInterface
                 CellData[agentsX[i], agentsY[i]].AgentState =
                     i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
             }
-        }
-        void InitGameData(MainWindowViewModel _viewModel)
-        {
-            viewModel = _viewModel;
-            TimerStr = "TIME:0/10";
-            TurnStr = "TURN:0/60";
-            SecondCount = 0;
         }
     }
 }

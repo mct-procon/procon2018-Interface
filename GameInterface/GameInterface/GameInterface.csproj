@@ -69,6 +69,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GameSettings\GameSettingDialog.xaml.cs">
+      <DependentUpon>GameSettingDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GameSettings\SettingStructure.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="ScoreCalculator.cs" />
     <Compile Include="Server.cs" />
@@ -76,6 +80,9 @@
     <Compile Include="ViewModelBase.cs" />
     <Page Include="Cells\CellUserControl.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameSettings\GameSettingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">

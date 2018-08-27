@@ -64,6 +64,11 @@ namespace GameInterface
             //};
         }
 
+        public void InitGame()
+        {
+
+        }
+
         public void SendGameInit(int playerNum)
         {
             sbyte[,] board = new sbyte[data.BoardWidth, data.BoardHeight];

@@ -22,14 +22,22 @@ namespace GameInterface
         public GameManager(MainWindowViewModel _viewModel)
         {
             this.viewModel = _viewModel;
-            InitGameData(_viewModel);
-            InitDispatcherTimer();
-        }
-        private void InitGameData(MainWindowViewModel _viewModel)
-        {
             this.data = new GameData(_viewModel);
             this.server = new Server(this);
         }
+
+        public void StartGame()
+        {
+            InitDispatcherTimer();
+        }
+
+        public void InitGameData()
+        {
+            data.InitGameData();
+            server.InitGame();
+            InitDispatcherTimer();
+        }
+
         private void InitDispatcherTimer()
         {
             dispatcherTimer = new DispatcherTimer(DispatcherPriority.Normal);
