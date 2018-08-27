@@ -24,7 +24,15 @@
 
         <TextBlock x:Name="text1" Grid.ColumnSpan="2" Text="{Binding TimerStr}" FontSize="24"/>
         <TextBlock x:Name="text2" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding TurnStr}" FontSize="24"/>
-        <Button x:Name="BreakButton" Grid.Column="3" HorizontalAlignment="Right" Content="DEBUG" Click="BreakButton_Click"/>
+        <Button x:Name="MenuButton" Grid.Column="3" HorizontalAlignment="Right" Content="MENU" Click="MenuButton_Click">
+            <Button.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="新規ゲーム"/>
+                    <MenuItem Header="デバッグ情報"/>
+                    <MenuItem Header="Break" Click="BreakMenu_Clicked"/>
+                </ContextMenu>
+            </Button.ContextMenu>
+        </Button>
 
         <Grid x:Name="player1Grid" Grid.Row="1" Grid.Column="0" Background="MediumSlateBlue">
             <Grid.ColumnDefinitions>

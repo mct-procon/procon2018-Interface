@@ -9,7 +9,7 @@ using MCTProcon29Protocol;
 
 namespace GameInterface
 {
-    internal class ClientRennenend : MCTProcon29Protocol.IIPCServerReader
+    internal class ClientRennenend : IIPCServerReader
     {
         Server server;
         GameManager gameManager;
@@ -44,24 +44,24 @@ namespace GameInterface
 
     class Server
     {
-        MCTProcon29Protocol.IPCManager[] managers = new MCTProcon29Protocol.IPCManager[2];
+        IPCManager[] managers = new IPCManager[2];
         GameData data;
         public bool[] isConnected = new bool[] { false, false };
 
         public Server(GameManager gameManager)
         {
-            for (int i = 0; i < Constants.PlayersNum; i++)
-            {
-                managers[i] = new MCTProcon29Protocol.IPCManager(new ClientRennenend(this, gameManager, i));
-            }
-            managers[0].Start(15000);
-            managers[1].Start(15001);
-            data = gameManager.data;
-            App.Current.Exit += (obj, e) =>
-            {
-                foreach (var man in managers)
-                    man.ShutdownServer();
-            };
+            //for (int i = 0; i < Constants.PlayersNum; i++)
+            //{
+            //    managers[i] = new IPCManager(new ClientRennenend(this, gameManager, i));
+            //}
+            //managers[0].Start(15000);
+            //managers[1].Start(15001);
+            //data = gameManager.data;
+            //App.Current.Exit += (obj, e) =>
+            //{
+            //    foreach (var man in managers)
+            //        man.ShutdownServer();
+            //};
         }
 
         public void SendGameInit(int playerNum)

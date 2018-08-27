@@ -111,8 +111,16 @@ namespace GameInterface
             return column;
         }
 
-        private void BreakButton_Click(object sender, RoutedEventArgs e)
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
+            MenuButton.ContextMenu.IsOpen = true;
+        }
+
+        private void BreakMenu_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (!System.Diagnostics.Debugger.IsAttached)
+                if (!System.Diagnostics.Debugger.Launch())
+                    return;
             System.Diagnostics.Debugger.Break();
         }
     }
