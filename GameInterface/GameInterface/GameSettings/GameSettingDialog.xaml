@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GameInterface.GameSettings"
         mc:Ignorable="d"
         Title="GameSettingDialog" Height="450" Width="800">
-    <Grid Margin="5">
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="1*"/>
@@ -17,32 +17,34 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10"/>
+            <RowDefinition Height="2"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="8"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="10"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="ゲーム設定" FontSize="42" Grid.ColumnSpan="4"/>
         <TextBlock Text="ターン数" Grid.Row="1" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="2"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="2" Text="{Binding Turns}"/>
         <TextBlock Text="ターン時間" Grid.Row="1" Grid.Column="3" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="1" Grid.Column="4" Margin="2"/>
+        <TextBox Grid.Row="1" Grid.Column="4" Margin="2" Text="{Binding LimitTime}"/>
         <TextBlock Text="追加時間" Grid.Row="3" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="2"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="2" Text="{Binding AdditionTime}"/>
         <TextBlock Text="フィールド設定" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
         <TextBlock Text="幅" Grid.Row="7" Grid.Column="0" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="7" Grid.Column="1" Margin="2,2,42,2"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="2,2,42,2" Text="{Binding BoardWidth}"/>
         <Button Content="ランダム" Grid.Row="7" Grid.Column="1" Margin="2" HorizontalAlignment="Right"/>
         <TextBlock Text="高さ" Grid.Row="7" Grid.Column="3" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="7" Grid.Column="4" Margin="2,2,42,2"/>
+        <TextBox Grid.Row="7" Grid.Column="4" Margin="2,2,42,2" Text="{Binding BoardHeight}"/>
         <Button Content="ランダム" Grid.Row="7" Grid.Column="4" Margin="2" HorizontalAlignment="Right"/>
         <TextBlock Text="1P設定" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
         <TextBlock Text="2P設定" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
@@ -55,8 +57,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <RadioButton Content="ユーザ" IsChecked="true"/>
-            <RadioButton Content="AI" Grid.Column="1"/>
+            <RadioButton x:Name="P1UserToggle" Content="ユーザ" IsChecked="true" Checked="P1UserToggle_Checked"/>
+            <RadioButton x:Name="P1AIToggle" Content="AI" Grid.Column="1" Checked="P1AIToggle_Checked"/>
         </Grid>
         <Grid Grid.Row="11" Grid.Column="3" Grid.ColumnSpan="2" Height="30">
             <Grid.Resources>
@@ -67,13 +69,15 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <RadioButton Content="ユーザ" IsChecked="true"/>
-            <RadioButton Content="AI" Grid.Column="1"/>
+            <RadioButton x:Name="P2UserToggle" Content="ユーザ" IsChecked="true" Checked="P2UserToggle_Checked"/>
+            <RadioButton x:Name="P2AIToggle" Content="AI" Grid.Column="1" Checked="P2AIToggle_Checked"/>
         </Grid>
         <TextBlock Text="ポート番号" Grid.Row="13" Grid.Column="0" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="13" Grid.Column="1" Margin="2"/>
+        <TextBox x:Name="P1PortBox" Grid.Row="13" Grid.Column="1" Margin="2" IsEnabled="{Binding ElementName=P1AIToggle, Path=IsChecked}" Text="10050" TextChanged="P1PortBox_TextChanged"/>
         <TextBlock Text="ポート番号" Grid.Row="13" Grid.Column="3" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox Grid.Row="13" Grid.Column="4" Margin="2"/>
-        
+        <TextBox x:Name="P2PortBox" Grid.Row="13" Grid.Column="4" Margin="2" IsEnabled="{Binding ElementName=P2AIToggle, Path=IsChecked}" Text="10051" TextChanged="P2PortBox_TextChanged"/>
+        <TextBlock x:Name="P1PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red"/>
+        <TextBlock x:Name="P2PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="14" Grid.Column="3" Grid.ColumnSpan="2" Foreground="Red"/>
+        <Button Grid.Row="15" Grid.Column="4" Content="OK" Margin="0,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30" Width="80"/>
     </Grid>
 </Window>

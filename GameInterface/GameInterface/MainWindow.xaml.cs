@@ -123,6 +123,11 @@ namespace GameInterface
         private void NewGameMenu_Clicked(object sender, RoutedEventArgs e)
         {
             InitGame();
+
+            //if(GameSettings.GameSettingDialog.ShowDialog(out var hoge))
+            //{
+
+            //}
         }
     }
 }
