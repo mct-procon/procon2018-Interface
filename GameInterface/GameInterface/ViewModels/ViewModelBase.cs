@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace GameInterface
+namespace GameInterface.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {

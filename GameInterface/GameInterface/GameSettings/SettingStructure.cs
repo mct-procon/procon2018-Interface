@@ -9,7 +9,7 @@ namespace GameInterface.GameSettings
     /// <summary>
     /// Game Settings Structure
     /// </summary>
-    internal class SettingStructure : ViewModelBase
+    public class SettingStructure : ViewModels.NotifyDataErrorInfoViewModel
     {
         private ushort limitTime = 5;
 
@@ -18,7 +18,12 @@ namespace GameInterface.GameSettings
         /// </summary>
         public ushort LimitTime {
             get => limitTime;
-            set => RaisePropertyChanged(ref limitTime, value);
+            set {
+                ResetError();
+                if (value == 0)
+                    AddError("ターン時間は0秒以上でなければなりません．");
+                RaisePropertyChanged(ref limitTime, value);
+            }
         }
 
         private ushort additionTime = 10;
@@ -68,7 +73,12 @@ namespace GameInterface.GameSettings
         /// </summary>
         public byte Turns {
             get => turns;
-            set => RaisePropertyChanged(ref turns, value);
+            set {
+                ResetError();
+                if (value < 1)
+                    AddError("ターン数は1以上でないといけません");
+                RaisePropertyChanged(ref turns, value);
+            }
         }
 
         private byte boardWidth = 10;
@@ -78,7 +88,14 @@ namespace GameInterface.GameSettings
         /// </summary>
         public byte BoardWidth {
             get => boardWidth;
-            set => RaisePropertyChanged(ref boardWidth, value);
+            set {
+                ResetError();
+                if (value <= 1)
+                    AddError("フィールドの幅は2以上でなければなりません");
+                if(value > 12)
+                    AddError("フィールドの幅は12以下でなければなりません");
+                RaisePropertyChanged(ref boardWidth, value);
+            }
         }
 
         private byte boardHeight = 10;
@@ -88,7 +105,14 @@ namespace GameInterface.GameSettings
         /// </summary>
         public byte BoardHeight {
             get => boardHeight;
-            set => RaisePropertyChanged(ref boardHeight, value);
+            set {
+                ResetError();
+                if(value <= 1)
+                    AddError("フィールドの高さは2以上でなければなりません");
+                if (value > 12)
+                    AddError("フィールドの高さは12以下でなければなりません");
+                RaisePropertyChanged(ref boardHeight, value);
+            }
         }
     }
 }

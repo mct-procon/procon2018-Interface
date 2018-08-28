@@ -6,7 +6,7 @@ using GameInterface.Cells;
 
 namespace GameInterface
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModels.ViewModelBase
     {
         public GameManager gameManager;
         //---------------------------------------

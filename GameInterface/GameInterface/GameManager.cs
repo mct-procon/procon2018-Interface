@@ -31,11 +31,21 @@ namespace GameInterface
             InitDispatcherTimer();
         }
 
-        public void InitGameData()
+        public void InitGameData(GameSettings.SettingStructure settings)
         {
             data.InitGameData();
             server.InitGame();
             InitDispatcherTimer();
+        }
+
+        public void TimerStop()
+        {
+            dispatcherTimer?.Stop();
+        }
+
+        public void TimerResume()
+        {
+            dispatcherTimer?.Start();
         }
 
         private void InitDispatcherTimer()

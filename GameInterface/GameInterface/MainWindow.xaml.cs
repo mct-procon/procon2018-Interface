@@ -26,9 +26,9 @@ namespace GameInterface
             CreateOrderButtonsOnPlayerGrid();
         }
 
-        void InitGame()
+        void InitGame(GameSettings.SettingStructure settings)
         {
-            gameManager.InitGameData();
+            gameManager.InitGameData(settings);
             CreateCellOnCellGrid(gameManager.data.BoardWidth, gameManager.data.BoardHeight);
         }
 
@@ -122,12 +122,10 @@ namespace GameInterface
 
         private void NewGameMenu_Clicked(object sender, RoutedEventArgs e)
         {
-            InitGame();
-
-            //if(GameSettings.GameSettingDialog.ShowDialog(out var hoge))
-            //{
-
-            //}
+            if (GameSettings.GameSettingDialog.ShowDialog(out var result))
+            {
+                InitGame(result);
+            }
         }
     }
 }

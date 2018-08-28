@@ -77,12 +77,16 @@
     <Compile Include="ScoreCalculator.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="TeamColor.cs" />
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="ViewModels\NotifyDataErrorInfoViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="Cells\CellUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GameSettings\GameSettingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameSettings\Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">

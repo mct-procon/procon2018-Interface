@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameInterface.Cells
 {
-    public class Cell : ViewModelBase
+    public class Cell : ViewModels.ViewModelBase
     {
         private int score;
         public int Score

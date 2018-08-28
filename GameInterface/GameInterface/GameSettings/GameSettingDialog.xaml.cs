@@ -117,5 +117,11 @@ namespace GameInterface.GameSettings
         {
             Set2PPort();
         }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            IsCanceled = false;
+            this.Close();
+        }
     }
 }
