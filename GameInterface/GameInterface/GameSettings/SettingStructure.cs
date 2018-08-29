@@ -90,8 +90,8 @@ namespace GameInterface.GameSettings
             get => boardWidth;
             set {
                 ResetError();
-                if (value <= 2)
-                    AddError("フィールドの幅は3以上でなければなりません");
+                if (value <= 3)
+                    AddError("フィールドの幅は4以上でなければなりません");
                 if(value > 12)
                     AddError("フィールドの幅は12以下でなければなりません");
                 RaisePropertyChanged(ref boardWidth, value);
@@ -107,8 +107,8 @@ namespace GameInterface.GameSettings
             get => boardHeight;
             set {
                 ResetError();
-                if(value <= 2)
-                    AddError("フィールドの高さは3以上でなければなりません");
+                if(value <= 3)
+                    AddError("フィールドの高さは4以上でなければなりません");
                 if (value > 12)
                     AddError("フィールドの高さは12以下でなければなりません");
                 RaisePropertyChanged(ref boardHeight, value);

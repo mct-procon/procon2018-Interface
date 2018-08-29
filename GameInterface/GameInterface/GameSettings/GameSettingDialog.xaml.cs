@@ -128,12 +128,12 @@ namespace GameInterface.GameSettings
 
         private void WidthBox_RandomButton_Click(object sender, RoutedEventArgs e)
         {
-            DataContext.BoardWidth = (byte)randomer.Next(2, 13);
+            DataContext.BoardWidth = (byte)randomer.Next(4, 13);
         }
 
         private void HeightBox_RandomButton_Click(object sender, RoutedEventArgs e)
         {
-            DataContext.BoardHeight = (byte)randomer.Next(2, 13);
+            DataContext.BoardHeight = (byte)randomer.Next(4, 13);
 
         }
     }
