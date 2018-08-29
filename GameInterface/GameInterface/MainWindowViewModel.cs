@@ -9,6 +9,7 @@ namespace GameInterface
     public class MainWindowViewModel : ViewModels.ViewModelBase
     {
         public GameManager gameManager;
+
         //---------------------------------------
         //画面に表示する変数
         private Cell[,] cellData = new Cell[12,12];

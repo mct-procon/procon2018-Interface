@@ -22,6 +22,8 @@ namespace GameInterface.GameSettings
         new SettingStructure DataContext { get; set; }
         bool IsCanceled { get; set; } = true;
 
+        Random randomer = new Random();
+
         public GameSettingDialog()
         {
             DataContext = new SettingStructure();
@@ -121,7 +123,18 @@ namespace GameInterface.GameSettings
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             IsCanceled = false;
-            this.Close();
+            Close();
+        }
+
+        private void WidthBox_RandomButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext.BoardWidth = (byte)randomer.Next(2, 13);
+        }
+
+        private void HeightBox_RandomButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataContext.BoardHeight = (byte)randomer.Next(2, 13);
+
         }
     }
 }

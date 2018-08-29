@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameInterface.GameSettings"
         mc:Ignorable="d"
-        Title="GameSettingDialog" Height="450" Width="800">
+        Title="ゲーム設定" Height="450" Width="800">
     <Window.Resources>
         <ResourceDictionary Source="Styles.xaml"/>
     </Window.Resources>
@@ -45,10 +45,10 @@
         <TextBlock Text="フィールド設定" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
         <TextBlock Text="幅" Grid.Row="7" Grid.Column="0" Margin="4" HorizontalAlignment="Right"/>
         <TextBox Grid.Row="7" Grid.Column="1" Margin="2,2,42,2" Text="{Binding BoardWidth}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
-        <Button Content="ランダム" Grid.Row="7" Grid.Column="1" Margin="2" HorizontalAlignment="Right"/>
+        <Button Content="ランダム" x:Name="WidthBox_RandomButton" Grid.Row="7" Grid.Column="1" Margin="2" HorizontalAlignment="Right" Click="WidthBox_RandomButton_Click"/>
         <TextBlock Text="高さ" Grid.Row="7" Grid.Column="3" Margin="4" HorizontalAlignment="Right"/>
         <TextBox Grid.Row="7" Grid.Column="4" Margin="2,2,42,2" Text="{Binding BoardHeight}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
-        <Button Content="ランダム" Grid.Row="7" Grid.Column="4" Margin="2" HorizontalAlignment="Right"/>
+        <Button Content="ランダム" x:Name="HeightBox_RandomButton" Grid.Row="7" Grid.Column="4" Margin="2" HorizontalAlignment="Right" Click="HeightBox_RandomButton_Click"/>
         <TextBlock Text="1P設定" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
         <TextBlock Text="2P設定" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
         <Grid Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Height="30">
@@ -76,9 +76,9 @@
             <RadioButton x:Name="P2AIToggle" Content="AI" Grid.Column="1" Checked="P2AIToggle_Checked"/>
         </Grid>
         <TextBlock Text="ポート番号" Grid.Row="13" Grid.Column="0" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox x:Name="P1PortBox" Grid.Row="13" Grid.Column="1" Margin="2" IsEnabled="{Binding ElementName=P1AIToggle, Path=IsChecked}" Text="10050" TextChanged="P1PortBox_TextChanged"/>
+        <TextBox x:Name="P1PortBox" Grid.Row="13" Grid.Column="1" Margin="2" IsEnabled="{Binding ElementName=P1AIToggle, Path=IsChecked}" Text="15000" TextChanged="P1PortBox_TextChanged"/>
         <TextBlock Text="ポート番号" Grid.Row="13" Grid.Column="3" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox x:Name="P2PortBox" Grid.Row="13" Grid.Column="4" Margin="2" IsEnabled="{Binding ElementName=P2AIToggle, Path=IsChecked}" Text="10051" TextChanged="P2PortBox_TextChanged"/>
+        <TextBox x:Name="P2PortBox" Grid.Row="13" Grid.Column="4" Margin="2" IsEnabled="{Binding ElementName=P2AIToggle, Path=IsChecked}" Text="15001" TextChanged="P2PortBox_TextChanged"/>
         <TextBlock x:Name="P1PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red"/>
         <TextBlock x:Name="P2PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="14" Grid.Column="3" Grid.ColumnSpan="2" Foreground="Red"/>
         <Button x:Name="OkButton" Grid.Row="15" Grid.Column="4" Content="OK" Margin="0,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30" Width="80" Click="OkButton_Click"/>

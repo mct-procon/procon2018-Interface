@@ -10,8 +10,8 @@ namespace GameInterface
 {
     public class GameData
     {
-        public const int FINISH_TURN = 60;
-        public const int TIME_LIMIT_SECOND = 5;
+        public byte FinishTurn { get; set; } = 60;
+        public int TimeLimitSeconds { get; set; } = 5;
 
         private MainWindowViewModel viewModel;
         private System.Random rand = new System.Random();
@@ -27,27 +27,10 @@ namespace GameInterface
                 viewModel.CellData = value;
             }
         }
-        private String timerStr;
-        public String TimerStr
-        {
-            get => timerStr;
-            set
-            {
-                timerStr = value;
-                viewModel.TimerStr = value;
-            }
-        }
-        private Agent[] agents = new Agent[]{
-            new Agent(),new Agent(),new Agent(),new Agent()
-        };
         public Agent[] Agents
         {
-            get => agents;
-            set
-            {
-                agents = value;
-                viewModel.Agents = value;
-            }
+            get => viewModel.Agents;
+            set => viewModel.Agents = value;
         }
         private int[] playerScores = new int[2];
         public int[] PlayerScores
@@ -57,16 +40,6 @@ namespace GameInterface
             {
                 playerScores = value;
                 viewModel.PlayerScores = value;
-            }
-        }
-        private String trunStr;
-        public String TurnStr
-        {
-            get => trunStr;
-            set
-            {
-                trunStr = value;
-                viewModel.TurnStr = value;
             }
         }
         //----------------------------------------
@@ -82,24 +55,20 @@ namespace GameInterface
             viewModel = _viewModel;
         }
 
-        public void InitGameData()
+        public void InitGameData( GameSettings.SettingStructure settings)
         {
-            TimerStr = "TIME:0/10";
-            TurnStr = "TURN:0/60";
             SecondCount = 0;
-            InitCellData();
+            NowTurn = 0;
+            FinishTurn = settings.Turns;
+            TimeLimitSeconds = settings.LimitTime;
+            InitCellData(settings);
             InitAgents();
         }
 
-        void InitCellData()
+        void InitCellData(GameSettings.SettingStructure settings)
         {
-
-            while (true)
-            {
-                BoardHeight = rand.Next(7, 13);
-                BoardWidth = rand.Next(7, 13);
-                if (BoardHeight * BoardWidth >= 80) break;
-            }
+            BoardHeight = settings.BoardHeight;
+            BoardWidth = settings.BoardWidth;
 
             //水平方向か垂直方向のどちらかを対称にするフラグをランダムに立てる
             bool isVertical;
@@ -150,8 +119,8 @@ namespace GameInterface
             agentsY[3] = agentsY[1] = BoardHeight - 1 - agentsY[0];
             for (int i = 0; i < Constants.AgentsNum; i++)
             {
-                agents[i].playerNum = (i / Constants.PlayersNum);
-                agents[i].Point = new Point(agentsX[i], agentsY[i]);
+                Agents[i].playerNum = (i / Constants.PlayersNum);
+                Agents[i].Point = new Point(agentsX[i], agentsY[i]);
                 CellData[agentsX[i], agentsY[i]].AreaState_ =
                     i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
 

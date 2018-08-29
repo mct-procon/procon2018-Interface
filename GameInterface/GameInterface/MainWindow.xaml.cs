@@ -122,6 +122,7 @@ namespace GameInterface
 
         private void NewGameMenu_Clicked(object sender, RoutedEventArgs e)
         {
+            viewModel.gameManager.TimerStop();
             if (GameSettings.GameSettingDialog.ShowDialog(out var result))
             {
                 InitGame(result);

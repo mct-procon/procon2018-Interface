@@ -31,9 +31,14 @@ namespace GameInterface
             InitDispatcherTimer();
         }
 
+        public void EndGame()
+        {
+            TimerStop();
+        }
+
         public void InitGameData(GameSettings.SettingStructure settings)
         {
-            data.InitGameData();
+            data.InitGameData(settings);
             server.InitGame();
             InitDispatcherTimer();
         }
@@ -54,6 +59,8 @@ namespace GameInterface
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
             dispatcherTimer.Start();
+            viewModel.TurnStr = $"TURN:{data.NowTurn}/{data.FinishTurn}";
+            viewModel.TimerStr = $"TIME:{data.SecondCount}/{data.TimeLimitSeconds}";
         }
 
         //一秒ごとに呼ばれる
@@ -72,7 +79,7 @@ namespace GameInterface
                 data.isStarted = true;
             }
             data.SecondCount++;
-            if (data.SecondCount % (GameData.TIME_LIMIT_SECOND) == 0)
+            if (data.SecondCount >= data.TimeLimitSeconds)
             {
                 data.NowTurn++;
                 server.SendTurnEnd(0);
@@ -155,8 +162,8 @@ namespace GameInterface
 
         private void Draw()
         {
-            data.TimerStr = "TIME:" + data.SecondCount.ToString() + "/" + GameData.TIME_LIMIT_SECOND.ToString();
-            data.TurnStr = "TURN:" + data.NowTurn.ToString() + "/" + GameData.FINISH_TURN.ToString();
+            viewModel.TimerStr = $"TIME:{data.SecondCount}/{data.TimeLimitSeconds}";
+            viewModel.TurnStr = $"TURN:{data.NowTurn}/{data.FinishTurn}";
         }
 
         public void OrderToAgent(Order order)
