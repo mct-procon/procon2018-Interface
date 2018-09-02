@@ -62,8 +62,13 @@ namespace GameInterface
                     var cellUserControl = new CellUserControl();
                     cellUserControl.DataContext = gameManager.data.CellData[i, j];
                     cellGrid.Children.Add(cellUserControl);
-                    Grid.SetRow(cellUserControl, j);
                     Grid.SetColumn(cellUserControl, i);
+                    Grid.SetRow(cellUserControl, j);
+
+                    var changeColorUserCtrl = new ChangeColorUserCtrl(new Point(i, j));
+                    cellGrid.Children.Add(changeColorUserCtrl);
+                    Grid.SetColumn(changeColorUserCtrl, i);
+                    Grid.SetRow(changeColorUserCtrl, j);
                 }
             }
         }
@@ -110,6 +115,13 @@ namespace GameInterface
         private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
             MenuButton.ContextMenu.IsOpen = true;
+        }
+
+        private void SkipButton_Click(object sender, RoutedEventArgs e)
+        {
+            //まだEndTurn()していないなら、しておく
+            if (gameManager.data.IsNextTurnStart) gameManager.EndTurn();
+            gameManager.StartTurn();
         }
 
         private void BreakMenu_Clicked(object sender, RoutedEventArgs e)

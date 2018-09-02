@@ -29,6 +29,9 @@ namespace GameInterface
         public void StartGame()
         {
             InitDispatcherTimer();
+            StartTurn();
+            GetScore();
+            data.IsGameStarted = true;
         }
 
         public void EndGame()
@@ -41,6 +44,7 @@ namespace GameInterface
             data.InitGameData(settings);
             server.InitGame();
             InitDispatcherTimer();
+            
         }
 
         public void TimerStop()
@@ -72,24 +76,72 @@ namespace GameInterface
 
         private void Update()
         {
-            if (!data.isStarted)
-            {
-                server.SendTurnStart(0);
-                server.SendTurnStart(1);
-                data.isStarted = true;
-            }
+            if (!data.IsNextTurnStart) return;
             data.SecondCount++;
-            if (data.SecondCount >= data.TimeLimitSeconds)
+            if (data.SecondCount == data.TimeLimitSeconds)
             {
-                data.NowTurn++;
-                server.SendTurnEnd(0);
-                server.SendTurnEnd(1);
-                data.SecondCount = 0;
-                MoveAgents();
-                GetScore();
-                server.SendTurnStart(0);
-                server.SendTurnStart(1);
+                EndTurn();
+                data.IsNextTurnStart = false;
             }
+        }
+
+        public void StartTurn()
+        {
+            server.SendTurnStart(0);
+            server.SendTurnStart(1);
+            data.IsNextTurnStart = true;
+        }
+
+        public void EndTurn()
+        {
+            if (!data.IsGameStarted) return;
+            server.SendTurnEnd(0);
+            server.SendTurnEnd(1);
+            data.NowTurn++;
+            MoveAgents();
+            GetScore();
+            data.SecondCount = 0;
+        }
+
+        public void ChangeCellToNextColor(Point point)
+        {
+            for (int i = 0; i < Constants.AgentsNum; i++)
+            {
+                if (data.IsSelectPosMode[i])
+                {
+                    var agent = data.Agents[i];
+                    data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
+                    data.Agents[i].Point = point;
+                    var nextPointColor =
+                        data.Agents[i].playerNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+                    data.CellData[point.X, point.Y].AreaState_ = nextPointColor;
+                    data.CellData[point.X, point.Y].AgentState = nextPointColor;
+                    data.IsSelectPosMode[i] = false;
+                    return;
+                }
+            }
+            int onAgnetNum = IsOnAgent(point);
+            if (onAgnetNum != -1)
+            {
+                data.IsSelectPosMode[onAgnetNum] = true;
+                return;
+            }
+            var color = data.CellData[point.X, point.Y].AreaState_;
+            var nextColor = (TeamColor)(((int)color + 1) % 3);
+            data.CellData[point.X, point.Y].AreaState_ = nextColor;
+        }
+
+        private int IsOnAgent(Point point)
+        {
+            for (int i = 0; i < Constants.AgentsNum; i++)
+            {
+                var agentPoint = data.Agents[i].Point;
+                if (agentPoint.X == point.X && agentPoint.Y == point.Y)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         private void MoveAgents()

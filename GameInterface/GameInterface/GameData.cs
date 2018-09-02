@@ -45,17 +45,18 @@ namespace GameInterface
         //----------------------------------------
         //それ以外
         public int SecondCount { get; set; }
-        public bool isStarted = false;
+        public bool IsGameStarted { get; set; } = false;
+        public bool IsNextTurnStart { get; set; } = true;
         public int NowTurn { get; set; }
         public int BoardHeight { get; private set; }
         public int BoardWidth { get; private set; }
-
+        public bool[] IsSelectPosMode { get; set; } = new bool[4];
         public GameData(MainWindowViewModel _viewModel)
         {
             viewModel = _viewModel;
         }
 
-        public void InitGameData( GameSettings.SettingStructure settings)
+        public void InitGameData(GameSettings.SettingStructure settings)
         {
             SecondCount = 0;
             NowTurn = 0;

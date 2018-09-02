@@ -69,6 +69,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Cells\ChangeColorUserCtrl.xaml.cs">
+      <DependentUpon>ChangeColorUserCtrl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GameSettings\GameSettingDialog.xaml.cs">
       <DependentUpon>GameSettingDialog.xaml</DependentUpon>
     </Compile>
@@ -80,6 +83,10 @@
     <Compile Include="ViewModels\NotifyDataErrorInfoViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="Cells\CellUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cells\ChangeColorUserCtrl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -118,7 +125,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Cells\Cell.cs" />
     <Compile Include="OrderButtonUserControl.xaml.cs">
       <DependentUpon>OrderButtonUserControl.xaml</DependentUpon>

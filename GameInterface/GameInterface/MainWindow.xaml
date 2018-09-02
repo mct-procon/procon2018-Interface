@@ -33,6 +33,9 @@
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
+        <Button x:Name="SkipButton" Grid.Column="3" HorizontalAlignment="Left"  Content="SKIP" Click="SkipButton_Click">
+             
+        </Button>
 
         <Grid x:Name="player1Grid" Grid.Row="1" Grid.Column="0" Background="MediumSlateBlue">
             <Grid.ColumnDefinitions>

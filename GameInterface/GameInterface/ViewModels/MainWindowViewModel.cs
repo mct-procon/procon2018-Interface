@@ -67,6 +67,7 @@ namespace GameInterface
         //---------------------------------------
         //ボタン等を押された時の関数
         public DelegateCommand<Order> OrderToAgentCommand { get; private set; }
+        public DelegateCommand<Point> ChangeColorCommand { get; private set; }
 
         public MainWindowViewModel()
         {
@@ -77,12 +78,21 @@ namespace GameInterface
             OrderToAgentCommand = new DelegateCommand<Order>(
                 OrderToAgentFromVM
             );
+            ChangeColorCommand = new DelegateCommand<Point>
+            (
+                ChangeColor
+            );
         }
 
         private void OrderToAgentFromVM(Order order)
         {
             if (isRemoveMode[order.agentNum]) order.state = Agent.State.REMOVE_TILE;
             gameManager.OrderToAgent(order);
+        }
+
+        private void ChangeColor(Point point)
+        {
+            gameManager.ChangeCellToNextColor(point);
         }
 
         private void UpdateOrderButton()
