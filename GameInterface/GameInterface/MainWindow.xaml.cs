@@ -138,6 +138,7 @@ namespace GameInterface
             if (GameSettings.GameSettingDialog.ShowDialog(out var result))
             {
                 InitGame(result);
+                gameManager.StartGame();
             }
         }
     }
