@@ -93,29 +93,29 @@ namespace GameInterface
             int x = p.X, y = p.Y;
             if (x == 1)
             {
-                if (y == 1)
+                if (y == -1)
                     return Direction.UP_RIGHT;
                 if (y == 0)
                     return Direction.RIGHT;
-                if (y == -1)
+                if (y == 1)
                     return Direction.DOWN_RIGHT;
             }
             else if (x == 0)
             {
-                if (y == 1)
+                if (y == -1)
                     return Direction.UP;
                 if (y == 0)
                     return Direction.NONE;
-                if (y == -1)
+                if (y == 1)
                     return Direction.DOWN;
             }
             else if (x == -1)
             {
-                if (y == 1)
+                if (y == -1)
                     return Direction.UP_LEFT;
                 if (y == 0)
                     return Direction.LEFT;
-                if (y == -1)
+                if (y == 1)
                     return Direction.DOWN_LEFT;
             }
             return Direction.NONE;
