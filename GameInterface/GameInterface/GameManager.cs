@@ -43,8 +43,6 @@ namespace GameInterface
         {
             data.InitGameData(settings);
             server.InitGame();
-            InitDispatcherTimer();
-            
         }
 
         public void TimerStop()
