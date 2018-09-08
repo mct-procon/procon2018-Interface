@@ -87,6 +87,8 @@ namespace GameInterface
         {
             server.SendTurnStart();
             data.IsNextTurnStart = true;
+            MoveAgents();
+            data.SecondCount = 0;
         }
 
         public void EndTurn()
@@ -94,9 +96,7 @@ namespace GameInterface
             if (!data.IsGameStarted) return;
             server.SendTurnEnd();
             data.NowTurn++;
-            MoveAgents();
             GetScore();
-            data.SecondCount = 0;
         }
 
         public void ChangeCellToNextColor(Point point)

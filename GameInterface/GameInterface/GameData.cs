@@ -59,7 +59,7 @@ namespace GameInterface
         public void InitGameData(GameSettings.SettingStructure settings)
         {
             SecondCount = 0;
-            NowTurn = 0;
+            NowTurn = 1;
             FinishTurn = settings.Turns;
             TimeLimitSeconds = settings.LimitTime;
             InitCellData(settings);
