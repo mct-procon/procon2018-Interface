@@ -14,7 +14,7 @@ namespace GameInterface
     public class GameManager
     {
         public GameData data;
-        internal  Server server;
+        internal Server server;
         private DispatcherTimer dispatcherTimer;
         public MainWindowViewModel viewModel;
 
@@ -142,14 +142,35 @@ namespace GameInterface
 
         private void MoveAgents()
         {
+            Point[] nextPoints = new Point[] { new Point(-1, -1), new Point(-1, -1), new Point(-1, -1), new Point(-1, -1) };
+            bool[] canMove = new bool[4];
             for (int i = 0; i < Constants.AgentsNum; i++)
             {
-                Agent agent = data.Agents[i];
+                var agent = data.Agents[i];
+                var nextP = agent.GetNextPoint();
+                if (CheckContain(nextPoints, nextP))
+                {
+                    canMove[i] = false;
+                    MessageBox.Show(i.ToString());
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (nextPoints[j].CompareTo(nextP) == 0)
+                        {
+                            MessageBox.Show(j.ToString());
+                            canMove[j] = false;
+                        }
+                    }
+                }
+                else canMove[i] = true;
+                nextPoints[i] = nextP;
+            }
+            for (int i = 0; i < Constants.AgentsNum; i++)
+            {
+                var agent = data.Agents[i];
+                var nextP = nextPoints[i];
+                if (CheckIsPointInBoard(nextP) == false || !canMove[i]) continue;
 
                 data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
-
-                Point nextP = agent.GetNextPoint();
-                if (CheckIsPointInBoard(nextP) == false) continue;
                 TeamColor nextAreaState = data.CellData[nextP.X, nextP.Y].AreaState_;
                 ActionAgentToNextP(i, agent, nextP, nextAreaState);
                 viewModel.IsRemoveMode[i] = false;
@@ -160,6 +181,14 @@ namespace GameInterface
             viewModel.Agents = data.Agents;
         }
 
+        private bool CheckContain(Point[] points, Point checkPoint)
+        {
+            foreach (var point in points)
+            {
+                if (point.CompareTo(checkPoint) == 0) return true;
+            }
+            return false;
+        }
         private void GetScore()
         {
             for (int i = 0; i < Constants.PlayersNum; i++)

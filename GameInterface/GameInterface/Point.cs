@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameInterface
 {
-    public class Point
+    public class Point : IComparable
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -15,6 +15,12 @@ namespace GameInterface
         {
             this.X = x;
             this.Y = y;
+        }
+        public int CompareTo(Object other)
+        {
+            var point = (Point)other;
+            if(this.X == point.X && this.Y == point.Y) return 0;
+            return 1;
         }
     }
 }
