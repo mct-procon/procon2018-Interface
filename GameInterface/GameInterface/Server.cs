@@ -22,55 +22,91 @@ namespace GameInterface
         }
         public void OnConnect(Connect connect)
         {
-            MessageBox.Show("Connected.");
-            server.SendGameInit(managerNum);
-            throw new NotImplementedException();
+            gameManager.viewModel.MainWindowDispatcher.Invoke(connectMethod);
         }
+
+        private void connectMethod()
+        {
+            if (managerNum == 0)
+                server.IsConnected1P = true;
+            else
+                server.IsConnected2P = true;
+        }
+
+        private Decided _decided = null;
 
         public void OnDecided(Decided decided)
         {
-            Agent.Direction dir = Agent.CastPointToDir(new Point((int)decided.MeAgent1.X, (int)decided.MeAgent1.Y));
+            _decided = decided;
+            gameManager.viewModel.MainWindowDispatcher.Invoke(decidedMethod);
+        }
+
+        private void decidedMethod()
+        {
+            var decided = _decided;
+            Agent.Direction dir = Agent.CastPointToDir(new Point(decided.MeAgent1.X, decided.MeAgent1.Y));
             gameManager.OrderToAgent(new Order(managerNum * 2, dir, Agent.State.MOVE));
-            dir = Agent.CastPointToDir(new Point((int)decided.MeAgent1.X, (int)decided.MeAgent1.Y));
+            dir = Agent.CastPointToDir(new Point(decided.MeAgent1.X, decided.MeAgent1.Y));
             gameManager.OrderToAgent(new Order(managerNum * 2 + 1, dir, Agent.State.MOVE));
-            throw new NotImplementedException();
         }
 
         public void OnInterrupt(Interrupt interrupt)
         {
-            throw new NotImplementedException();
+            gameManager.viewModel.MainWindowDispatcher.Invoke(
+                () => MessageBox.Show($"{managerNum + 1}P is disconnected."));
         }
     }
 
-    class Server
+    class Server : ViewModels.ViewModelBase
     {
         IPCManager[] managers = new IPCManager[2];
         GameData data;
-        public bool[] isConnected = new bool[] { false, false };
+        GameManager gameManager;
+        private bool[] isConnected = new bool[] { false, false };
+        public bool IsConnected1P {
+            get => isConnected[0];
+            set => RaisePropertyChanged(ref isConnected[0], value);
+        }
+
+        public bool IsConnected2P {
+            get => isConnected[1];
+            set => RaisePropertyChanged(ref isConnected[1], value);
+        }
 
         public Server(GameManager gameManager)
         {
-            //for (int i = 0; i < Constants.PlayersNum; i++)
-            //{
-            //    managers[i] = new IPCManager(new ClientRennenend(this, gameManager, i));
-            //}
-            //managers[0].Start(15000);
-            //managers[1].Start(15001);
-            //data = gameManager.data;
-            //App.Current.Exit += (obj, e) =>
-            //{
-            //    foreach (var man in managers)
-            //        man.ShutdownServer();
-            //};
+            this.gameManager = gameManager;
+            data = gameManager.data;
+            App.Current.Exit += (obj, e) =>
+            {
+                foreach (var man in managers)
+                    man?.ShutdownServer();
+            };
         }
 
-        public void InitGame()
+        public void StartListening(GameSettings.SettingStructure settings)
         {
-
+            if (!settings.IsUser1P)
+            {
+                managers[0] = new IPCManager(new ClientRennenend(this, gameManager, 0));
+                managers[0].Start(settings.Port1P);
+            }
+            if (!settings.IsUser2P)
+            {
+                managers[1] = new IPCManager(new ClientRennenend(this, gameManager, 1));
+                managers[1].Start(settings.Port2P);
+            }
         }
 
-        public void SendGameInit(int playerNum)
+        public void SendGameInit()
         {
+            SendGameInit(0);
+            SendGameInit(1);
+        }
+
+        private void SendGameInit(int playerNum)
+        {
+            if (!isConnected[playerNum]) return;
             sbyte[,] board = new sbyte[data.BoardWidth, data.BoardHeight];
             for (int i = 0; i < data.BoardWidth; i++)
             {
@@ -85,15 +121,20 @@ namespace GameInterface
                 new MCTProcon29Protocol.Point((uint)data.Agents[2 - playerNum * 2].Point.X, (uint)data.Agents[0 + playerNum * 2].Point.Y),
                 new MCTProcon29Protocol.Point((uint)data.Agents[3 - playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
                 data.FinishTurn));
-            isConnected[playerNum] = true;
         }
 
-        public void SendTurnStart(int playerNum)
+        public void SendTurnStart()
+        {
+            SendTurnStart(0);
+            SendTurnStart(1);
+        }
+
+        private void SendTurnStart(int playerNum)
         {
             if (!isConnected[playerNum]) return;
 
-            ColoredBoardSmallBigger colorBoardMe = new ColoredBoardSmallBigger();
-            ColoredBoardSmallBigger colorBoardEnemy = new ColoredBoardSmallBigger();
+            ColoredBoardSmallBigger colorBoardMe = new ColoredBoardSmallBigger((uint)data.BoardWidth, (uint)data.BoardHeight);
+            ColoredBoardSmallBigger colorBoardEnemy = new ColoredBoardSmallBigger((uint)data.BoardWidth, (uint)data.BoardHeight);
 
             for (int i = 0; i < data.BoardWidth; i++)
             {
@@ -115,7 +156,13 @@ namespace GameInterface
                 colorBoardEnemy));
         }
 
-        public void SendTurnEnd(int playerNum)
+        public void SendTurnEnd()
+        {
+            SendTurnEnd(0);
+            SendTurnEnd(1);
+        }
+
+        private void SendTurnEnd(int playerNum)
         {
             if (!isConnected[playerNum]) return;
             managers[playerNum].Write(DataKind.TurnEnd, new TurnEnd((byte)data.NowTurn));

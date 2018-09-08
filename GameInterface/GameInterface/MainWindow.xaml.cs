@@ -20,6 +20,7 @@ namespace GameInterface
         {
             InitializeComponent();
             this.viewModel = new MainWindowViewModel();
+            this.viewModel.MainWindowDispatcher = Dispatcher;
             this.DataContext = this.viewModel;
             this.gameManager = new GameManager(viewModel);
             this.viewModel.gameManager = this.gameManager;
@@ -138,6 +139,8 @@ namespace GameInterface
             if (GameSettings.GameSettingDialog.ShowDialog(out var result))
             {
                 InitGame(result);
+                if (!(result.IsUser1P & result.IsUser2P))
+                    (new GameSettings.WaitForAIDialog(viewModel.gameManager.server, result)).ShowDialog();
                 gameManager.StartGame();
             }
         }

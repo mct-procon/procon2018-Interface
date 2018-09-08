@@ -14,10 +14,9 @@ namespace GameInterface
     public class GameManager
     {
         public GameData data;
-        private Server server;
+        internal  Server server;
         private DispatcherTimer dispatcherTimer;
-        private MainWindowViewModel viewModel;
-
+        public MainWindowViewModel viewModel;
 
         public GameManager(MainWindowViewModel _viewModel)
         {
@@ -28,6 +27,7 @@ namespace GameInterface
 
         public void StartGame()
         {
+            server.SendGameInit();
             InitDispatcherTimer();
             StartTurn();
             GetScore();
@@ -42,7 +42,7 @@ namespace GameInterface
         public void InitGameData(GameSettings.SettingStructure settings)
         {
             data.InitGameData(settings);
-            server.InitGame();
+            server.StartListening(settings);
         }
 
         public void TimerStop()
@@ -85,16 +85,14 @@ namespace GameInterface
 
         public void StartTurn()
         {
-            server.SendTurnStart(0);
-            server.SendTurnStart(1);
+            server.SendTurnStart();
             data.IsNextTurnStart = true;
         }
 
         public void EndTurn()
         {
             if (!data.IsGameStarted) return;
-            server.SendTurnEnd(0);
-            server.SendTurnEnd(1);
+            server.SendTurnEnd();
             data.NowTurn++;
             MoveAgents();
             GetScore();

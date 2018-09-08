@@ -3,12 +3,15 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Windows;
 using GameInterface.Cells;
+using System.Windows.Threading;
 
 namespace GameInterface
 {
     public class MainWindowViewModel : ViewModels.ViewModelBase
     {
         public GameManager gameManager;
+
+        public Dispatcher MainWindowDispatcher;
 
         //---------------------------------------
         //画面に表示する変数

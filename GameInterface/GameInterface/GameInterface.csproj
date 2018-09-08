@@ -76,10 +76,14 @@
       <DependentUpon>GameSettingDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="GameSettings\SettingStructure.cs" />
+    <Compile Include="GameSettings\WaitForAIDialog.xaml.cs">
+      <DependentUpon>WaitForAIDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Order.cs" />
     <Compile Include="ScoreCalculator.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="TeamColor.cs" />
+    <Compile Include="ValueConvertes\BooleanNotConverter.cs" />
     <Compile Include="ViewModels\NotifyDataErrorInfoViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="Cells\CellUserControl.xaml">
@@ -94,6 +98,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GameSettings\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameSettings\WaitForAIDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
