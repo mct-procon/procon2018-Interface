@@ -95,8 +95,15 @@ namespace GameInterface
         {
             if (!data.IsGameStarted) return;
             server.SendTurnEnd();
-            data.NowTurn++;
             GetScore();
+            if (data.NowTurn < data.FinishTurn)
+            {
+                data.NowTurn++;
+            }
+            else
+            {
+                server.SendGameEnd();
+            }
         }
 
         public void ChangeCellToNextColor(Point point)

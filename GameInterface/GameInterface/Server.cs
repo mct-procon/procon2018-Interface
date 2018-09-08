@@ -63,12 +63,14 @@ namespace GameInterface
         GameData data;
         GameManager gameManager;
         private bool[] isConnected = new bool[] { false, false };
-        public bool IsConnected1P {
+        public bool IsConnected1P
+        {
             get => isConnected[0];
             set => RaisePropertyChanged(ref isConnected[0], value);
         }
 
-        public bool IsConnected2P {
+        public bool IsConnected2P
+        {
             get => isConnected[1];
             set => RaisePropertyChanged(ref isConnected[1], value);
         }
@@ -166,6 +168,17 @@ namespace GameInterface
         {
             if (!isConnected[playerNum]) return;
             managers[playerNum].Write(DataKind.TurnEnd, new TurnEnd((byte)data.NowTurn));
+        }
+
+        public void SendGameEnd()
+        {
+            int score = data.PlayerScores[0], enemyScore = data.PlayerScores[1];
+            for (int i = 0; i < Constants.PlayersNum; i++)
+            {
+                if (!isConnected[i]) continue;
+                managers[i].Write(DataKind.GameEnd, new GameEnd(score, enemyScore));
+                Swap<int>(ref score, ref enemyScore);
+            }
         }
 
         private void Swap<T>(ref T lhs, ref T rhs)
