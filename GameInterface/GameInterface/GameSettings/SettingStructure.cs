@@ -26,16 +26,6 @@ namespace GameInterface.GameSettings
             }
         }
 
-        private ushort additionTime = 10;
-
-        /// <summary>
-        /// Addition Time [Seconds]
-        /// </summary>
-        public ushort AdditionTime {
-            get => additionTime;
-            set => RaisePropertyChanged(ref additionTime, value);
-        }
-
         private ushort port1P = 0;
 
         /// <summary>
