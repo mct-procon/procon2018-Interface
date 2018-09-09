@@ -149,43 +149,153 @@ namespace GameInterface
 
         private void MoveAgents()
         {
-            Point[] nextPoints = new Point[] { new Point(-1, -1), new Point(-1, -1), new Point(-1, -1), new Point(-1, -1) };
-            bool[] canMove = new bool[4];
-            for (int i = 0; i < Constants.AgentsNum; i++)
+            List<int> ActionableAgentsId = GetActionableAgentsId();
+
+            for (int i = 0; i < ActionableAgentsId.Count; i++)
             {
-                var agent = data.Agents[i];
+                int id = ActionableAgentsId[i];
+                var agent = data.Agents[id];
                 var nextP = agent.GetNextPoint();
-                if (CheckContain(nextPoints, nextP))
-                {
-                    canMove[i] = false;
-                    MessageBox.Show(i.ToString());
-                    for (int j = 0; j < i; j++)
-                    {
-                        if (nextPoints[j].CompareTo(nextP) == 0)
-                        {
-                            MessageBox.Show(j.ToString());
-                            canMove[j] = false;
-                        }
-                    }
-                }
-                else canMove[i] = true;
-                nextPoints[i] = nextP;
-            }
-            for (int i = 0; i < Constants.AgentsNum; i++)
-            {
-                var agent = data.Agents[i];
-                var nextP = nextPoints[i];
-                if (CheckIsPointInBoard(nextP) == false || !canMove[i]) continue;
 
                 data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
                 TeamColor nextAreaState = data.CellData[nextP.X, nextP.Y].AreaState_;
-                ActionAgentToNextP(i, agent, nextP, nextAreaState);
-                viewModel.IsRemoveMode[i] = false;
+                ActionAgentToNextP(id, agent, nextP, nextAreaState);
+                viewModel.IsRemoveMode[id] = false;
 
                 data.CellData[agent.Point.X, agent.Point.Y].AgentState =
-                    i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+                    id / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
             }
             viewModel.Agents = data.Agents;
+        }
+
+        //naotti: 行動可能なエージェントのId(1p{0,1}, 2p{2,3})を返す。
+        private List<int> GetActionableAgentsId()
+        {
+            int i, j;
+            bool[] canMove = new bool[Constants.AgentsNum];     //canMove[i] = エージェントiは移動するか？
+            bool[] canAction = new bool[Constants.AgentsNum];   //canAction[i] = エージェントiは移動またはタイル除去をするか？
+
+            //まずは、各エージェントの移動先を知りたいので、canMoveを求める。
+            //最初, canMove[i] = trueとしておき、移動不可なエージェントを振るい落とす方式を取る。このループでは以下の2点をチェックする。
+            //・相手陣を指しているエージェントはタイル除去なので、移動しない
+            //・範囲外を指しているエージェントは移動できない。
+            for (i = 0; i < Constants.AgentsNum; i++)
+            {
+                canMove[i] = true;
+                var agent = data.Agents[i];
+                var nextP = agent.GetNextPoint();
+                if (CheckIsPointInBoard(nextP) == false) { canMove[i] = false; continue; }
+                TeamColor nextAreaState = data.CellData[nextP.X, nextP.Y].AreaState_;
+                if (agent.playerNum == 0 && nextAreaState == TeamColor.Area2P) { canMove[i] = false; }
+                if (agent.playerNum == 1 && nextAreaState == TeamColor.Area1P) { canMove[i] = false; }
+            }
+
+            //次に、「指示先(agent.GetNextPoint()の位置)が被っているエージェントは移動不可」とする。
+            for (i = 0; i < Constants.AgentsNum; i++)
+            {
+                var agent1 = data.Agents[i];
+                var nextP1 = agent1.GetNextPoint();
+                for (j = i + 1; j < Constants.AgentsNum; j++)
+                {
+                    var agent2 = data.Agents[j];
+                    var nextP2 = agent2.GetNextPoint();
+                    if (nextP1.CompareTo(nextP2) == 0)
+                    {
+                        canMove[i] = false;
+                        canMove[j] = false;
+                    }
+                }
+            }
+
+            //次に、canMove[]の更新が起きなくなるまで、以下を繰り返す
+            //・移動先に移動不可な(orタイル除去をする)エージェントがいる場合、移動不可とする
+            while (true)
+            {
+                bool updateFlag = false;
+
+                for (i = 0; i < Constants.AgentsNum; i++)
+                {
+                    if (canMove[i] == false) { continue; }
+                    var agent1 = data.Agents[i];
+                    var nextP1 = agent1.GetNextPoint();
+                    for (j = 0; j < Constants.AgentsNum; j++)
+                    {
+                        if (i == j) { continue; }
+                        if (canMove[j] == true) { continue; }
+                        var agent2 = data.Agents[j];
+                        var nextP2 = agent2.Point;
+                        if (nextP1.CompareTo(nextP2) == 0)
+                        {
+                            canMove[i] = false;
+                            updateFlag = true;
+                            break;
+                        }
+                    }
+                }
+                if (updateFlag == false) { break; }
+            }
+
+            //この時点でcanMove[i] == trueならば、エージェントiは移動することになる。
+            //次は、行動(移動またはタイル除去)が可能なエージェントを求める。
+            //最初, canAction[i] = trueとしておき、行動不可なエージェントを振るい落とす方式を取る。このループでは以下の1点をチェックする。
+            //・範囲外を指しているエージェントは移動できない。
+            for (i = 0; i < Constants.AgentsNum; i++)
+            {
+                canAction[i] = true;
+                var agent = data.Agents[i];
+                var nextP = agent.GetNextPoint();
+                if (CheckIsPointInBoard(nextP) == false) { canAction[i] = false; }
+            }
+
+            //次に、「指示先(agent.GetNextPoint()の位置)が被っているエージェントは行動不可」とする。
+            for (i = 0; i < Constants.AgentsNum; i++)
+            {
+                var agent1 = data.Agents[i];
+                var nextP1 = agent1.GetNextPoint();
+                for (j = i + 1; j < Constants.AgentsNum; j++)
+                {
+                    var agent2 = data.Agents[j];
+                    var nextP2 = agent2.GetNextPoint();
+                    if (nextP1.CompareTo(nextP2) == 0)
+                    {
+                        canAction[i] = false;
+                        canAction[j] = false;
+                    }
+                }
+            }
+
+            //次に、「指示先に移動不可な(orタイル除去をする)エージェントがいる場合、行動不可」とする。
+            //このチェックは, 先ほどのように何回もwhileループで回す必要がない。
+            for (i = 0; i < Constants.AgentsNum; i++)
+            {
+                if (canAction[i] == false) { continue; }
+                var agent1 = data.Agents[i];
+                var nextP1 = agent1.GetNextPoint();
+
+                for (j = 0; j < Constants.AgentsNum; j++)
+                {
+                    if (i == j) { continue; }
+                    if (canMove[j] == true) { continue; }
+                    var agent2 = data.Agents[j];
+                    var nextP2 = agent2.Point;
+
+                    if (nextP1.CompareTo(nextP2) == 0)
+                    {
+                        canAction[i] = false;
+                        break;
+                    }
+                }
+            }
+
+            //この時点でcanAction[i] == trueならば、エージェントiは行動可能である
+            //よって、行動可能なエージェントの番号を返すことができる
+            List<int> ret = new List<int>();
+            for (i = 0; i < Constants.AgentsNum; i++)
+            {
+                if (canAction[i]) { ret.Add(i); }
+                else { MessageBox.Show(i.ToString()); }
+            }
+            return ret;
         }
 
         private bool CheckContain(Point[] points, Point checkPoint)
