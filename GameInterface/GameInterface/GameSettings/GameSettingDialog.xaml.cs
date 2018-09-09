@@ -20,7 +20,6 @@ namespace GameInterface.GameSettings
     public partial class GameSettingDialog : Window
     {
         new SettingStructure DataContext { get; set; }
-        bool IsCanceled { get; set; } = true;
 
         Random randomer = new Random();
 
@@ -29,21 +28,22 @@ namespace GameInterface.GameSettings
             DataContext = new SettingStructure();
             base.DataContext = DataContext;
             InitializeComponent();
+            this.DialogResult = false;
         }
 
         internal static bool ShowDialog(out SettingStructure setting)
         {
             GameSettingDialog dialog = new GameSettingDialog();
             dialog.ShowDialog();
-            if (dialog.IsCanceled)
-            {
-                setting = null;
-                return false;
-            }
-            else
+            if (dialog.DialogResult == true)
             {
                 setting = dialog.DataContext;
                 return true;
+            }
+            else
+            {
+                setting = null;
+                return false;
             }
         }
 
@@ -122,7 +122,7 @@ namespace GameInterface.GameSettings
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            IsCanceled = false;
+            DialogResult = true;
             Close();
         }
 
