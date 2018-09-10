@@ -30,10 +30,9 @@ namespace GameInterface.QRCodeReader
             InitializeComponent();
             DataContext = new QRCodeReaderViewModel(this.Dispatcher);
             base.DataContext = this.DataContext;
-            this.DialogResult = false;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e) => 
+        private void Window_Loaded(object sender, RoutedEventArgs e) =>
             DataContext.InitMainLoop();
 
         private void Window_Unloaded(object sender, RoutedEventArgs e) =>

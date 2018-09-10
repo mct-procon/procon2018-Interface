@@ -28,7 +28,6 @@ namespace GameInterface.QRCodeReader
             InitializeComponent();
             this.DataContext = new ImageReferenceViewModel();
             base.DataContext = this.DataContext;
-            this.DialogResult = false;
         }
 
         private void CancelButtonClicked(object sender, RoutedEventArgs e) => this.Close();
