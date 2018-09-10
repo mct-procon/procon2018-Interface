@@ -28,7 +28,7 @@ namespace GameInterface.GameSettings
             DataContext = new SettingStructure();
             base.DataContext = DataContext;
             InitializeComponent();
-            this.DialogResult = false;
+            //this.DialogResult = false;
         }
 
         internal static bool ShowDialog(out SettingStructure setting)

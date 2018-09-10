@@ -99,6 +99,8 @@ namespace GameInterface
             if (data.NowTurn < data.FinishTurn)
             {
                 data.NowTurn++;
+                if (data.IsAutoSkipTurn)
+                    StartTurn();
             }
             else
             {
@@ -108,27 +110,26 @@ namespace GameInterface
 
         public void ChangeCellToNextColor(Point point)
         {
-            for (int i = 0; i < Constants.AgentsNum; i++)
-            {
-                if (data.IsSelectPosMode[i])
-                {
-                    var agent = data.Agents[i];
-                    data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
-                    data.Agents[i].Point = point;
-                    var nextPointColor =
-                        data.Agents[i].playerNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
-                    data.CellData[point.X, point.Y].AreaState_ = nextPointColor;
-                    data.CellData[point.X, point.Y].AgentState = nextPointColor;
-                    data.IsSelectPosMode[i] = false;
-                    return;
-                }
-            }
+            //エージェントがいる場合、エージェントの移動処理へ
             int onAgnetNum = IsOnAgent(point);
             if (onAgnetNum != -1)
             {
-                data.IsSelectPosMode[onAgnetNum] = true;
+                data.SelectPosAgent = onAgnetNum;
                 return;
             }
+            else
+            {
+                for (int i = 0; i < Constants.AgentsNum; i++)
+                {
+                    if (data.SelectPosAgent == i)
+                    {
+                        data.SelectPosAgent = -1;
+                        WarpAgent(data.Agents[i], point);
+                        return;
+                    }
+                }
+            }
+
             var color = data.CellData[point.X, point.Y].AreaState_;
             var nextColor = (TeamColor)(((int)color + 1) % 3);
             data.CellData[point.X, point.Y].AreaState_ = nextColor;
@@ -145,6 +146,18 @@ namespace GameInterface
                 }
             }
             return -1;
+        }
+
+        private void WarpAgent(Agent agent,Point point)
+        {
+            data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
+            agent.Point = point;
+            var nextPointColor =
+                agent.playerNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+            data.CellData[point.X, point.Y].AreaState_ = nextPointColor;
+            data.CellData[point.X, point.Y].AgentState = nextPointColor;
+            viewModel.Agents = data.Agents;
+            return;
         }
 
         private void MoveAgents()

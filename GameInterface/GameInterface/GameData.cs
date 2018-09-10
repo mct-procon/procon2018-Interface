@@ -43,14 +43,14 @@ namespace GameInterface
             }
         }
         //----------------------------------------
-        //それ以外
         public int SecondCount { get; set; }
         public bool IsGameStarted { get; set; } = false;
         public bool IsNextTurnStart { get; set; } = true;
+        public bool IsAutoSkipTurn { get; set; }
         public int NowTurn { get; set; }
         public int BoardHeight { get; private set; }
         public int BoardWidth { get; private set; }
-        public bool[] IsSelectPosMode { get; set; } = new bool[4];
+        public int SelectPosAgent { get; set; }
         public GameData(MainWindowViewModel _viewModel)
         {
             viewModel = _viewModel;
@@ -62,6 +62,7 @@ namespace GameInterface
             NowTurn = 1;
             FinishTurn = settings.Turns;
             TimeLimitSeconds = settings.LimitTime;
+            IsAutoSkipTurn = settings.IsAutoSkip;
             InitCellData(settings);
             InitAgents();
         }
