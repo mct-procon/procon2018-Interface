@@ -28,7 +28,6 @@ namespace GameInterface.GameSettings
             DataContext = new SettingStructure();
             base.DataContext = DataContext;
             InitializeComponent();
-            this.DialogResult = false;
         }
 
         internal static bool ShowDialog(out SettingStructure setting)
@@ -134,7 +133,6 @@ namespace GameInterface.GameSettings
         private void HeightBox_RandomButton_Click(object sender, RoutedEventArgs e)
         {
             DataContext.BoardHeight = (byte)randomer.Next(4, 13);
-
         }
     }
 }
