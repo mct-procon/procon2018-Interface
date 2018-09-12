@@ -16,11 +16,14 @@ namespace GameInterface
             this.X = x;
             this.Y = y;
         }
-        public int CompareTo(Object other)
+        public int CompareTo(object other)
         {
             var point = (Point)other;
             if(this.X == point.X && this.Y == point.Y) return 0;
             return 1;
         }
+
+        public int CompareTo(Point other)
+            => X == other.X && Y == other.Y ? 0 : 1;
     }
 }

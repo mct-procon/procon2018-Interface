@@ -319,6 +319,7 @@ namespace GameInterface
             }
             return false;
         }
+
         private void GetScore()
         {
             for (int i = 0; i < Constants.PlayersNum; i++)
