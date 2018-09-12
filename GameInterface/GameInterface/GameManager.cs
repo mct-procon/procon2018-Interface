@@ -85,10 +85,10 @@ namespace GameInterface
 
         public void StartTurn()
         {
-            server.SendTurnStart();
             data.IsNextTurnStart = true;
             MoveAgents();
             data.SecondCount = 0;
+            server.SendTurnStart();
         }
 
         public void EndTurn()
