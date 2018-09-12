@@ -164,21 +164,28 @@ namespace GameInterface
         {
             List<int> ActionableAgentsId = GetActionableAgentsId();
 
+            // Erase Agent Location's data from cells.
+            foreach(var a in data.Agents)
+                data.CellData[a.Point.X, a.Point.Y].AgentState = TeamColor.Free;
+
             for (int i = 0; i < ActionableAgentsId.Count; i++)
             {
                 int id = ActionableAgentsId[i];
                 var agent = data.Agents[id];
                 var nextP = agent.GetNextPoint();
 
-                data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
                 TeamColor nextAreaState = data.CellData[nextP.X, nextP.Y].AreaState_;
                 ActionAgentToNextP(id, agent, nextP, nextAreaState);
                 viewModel.IsRemoveMode[id] = false;
-
-                data.CellData[agent.Point.X, agent.Point.Y].AgentState =
-                    id / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
             }
             viewModel.Agents = data.Agents;
+
+            // Reset Agent Location's data to cells.
+            for (int id = 0; id < data.Agents.Length; ++id)
+            {
+                var a = data.Agents[id].Point;
+                data.CellData[a.X, a.Y].AgentState = id / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+            }
         }
 
         //naotti: 行動可能なエージェントのId(1p{0,1}, 2p{2,3})を返す。
