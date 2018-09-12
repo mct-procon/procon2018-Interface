@@ -104,5 +104,15 @@ namespace GameInterface.GameSettings
                 RaisePropertyChanged(ref boardHeight, value);
             }
         }
+
+        private bool isAutoSkip = false;
+
+        /// <summary>
+        /// Whether every turn skip automatic.
+        /// </summary>
+        public bool IsAutoSkip {
+            get => isAutoSkip;
+            set => isAutoSkip = value;
+        }
     }
 }

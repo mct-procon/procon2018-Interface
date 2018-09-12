@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameInterface.GameSettings"
         mc:Ignorable="d"
-        Title="ゲーム設定" Height="450" Width="800">
+        Title="ゲーム設定" Height="450" Width="600">
     <Window.Resources>
         <ResourceDictionary Source="Styles.xaml"/>
     </Window.Resources>
@@ -20,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -28,16 +29,17 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Text="ゲーム設定" FontSize="42" Grid.ColumnSpan="4"/>
-        <TextBlock Text="ターン数" Grid.Row="1" Margin="4" HorizontalAlignment="Right"/>
+        <TextBlock Text="ターン数" Grid.Row="1" Margin="0,4,4,4" HorizontalAlignment="Right"/>
         <TextBox Grid.Row="1" Grid.Column="1" Margin="2" Text="{Binding Turns}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
-        <TextBlock Text="ターン時間" Grid.Row="1" Grid.Column="3" Margin="4" HorizontalAlignment="Right"/>
+        <TextBlock Text="ターン時間" Grid.Row="1" Grid.Column="3" Margin="0,4,4,4" HorizontalAlignment="Right"/>
         <TextBox Grid.Row="1" Grid.Column="4" Margin="2" Text="{Binding LimitTime}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
+        <CheckBox Content="自動ターンエンド" Grid.Row="2" Grid.Column="1" IsChecked="{Binding IsAutoSkip}"/>
 
-        <TextBlock Text="フィールド設定" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
-        <TabControl Grid.Row="4" Grid.ColumnSpan="5">
+        <TextBlock Text="フィールド設定" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
+        <TabControl Grid.Row="5" Grid.ColumnSpan="5" Margin="5">
             <TabItem Header="乱数によって生成">
                 <Grid Margin="3">
                     <Grid.ColumnDefinitions>
@@ -72,9 +74,9 @@
             </TabItem>-->
         </TabControl>
 
-        <TextBlock Text="1P設定" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
-        <TextBlock Text="2P設定" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
-        <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Height="30">
+        <TextBlock Text="1P設定" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
+        <TextBlock Text="2P設定" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
+        <Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Height="30" Margin="3">
             <Grid.Resources>
                 <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton} }">
                 </Style>
@@ -86,7 +88,7 @@
             <RadioButton x:Name="P1UserToggle" Content="ユーザ" IsChecked="true" Checked="P1UserToggle_Checked"/>
             <RadioButton x:Name="P1AIToggle" Content="AI" Grid.Column="1" Checked="P1AIToggle_Checked"/>
         </Grid>
-        <Grid Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2" Height="30">
+        <Grid Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" Height="30" Margin="3">
             <Grid.Resources>
                 <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton} }">
                 </Style>
@@ -98,12 +100,12 @@
             <RadioButton x:Name="P2UserToggle" Content="ユーザ" IsChecked="true" Checked="P2UserToggle_Checked"/>
             <RadioButton x:Name="P2AIToggle" Content="AI" Grid.Column="1" Checked="P2AIToggle_Checked"/>
         </Grid>
-        <TextBlock Text="ポート番号" Grid.Row="8" Grid.Column="0" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox x:Name="P1PortBox" Grid.Row="8" Grid.Column="1" Margin="2" IsEnabled="{Binding ElementName=P1AIToggle, Path=IsChecked}" Text="15000" TextChanged="P1PortBox_TextChanged"/>
-        <TextBlock Text="ポート番号" Grid.Row="8" Grid.Column="3" Margin="4" HorizontalAlignment="Right"/>
-        <TextBox x:Name="P2PortBox" Grid.Row="8" Grid.Column="4" Margin="2" IsEnabled="{Binding ElementName=P2AIToggle, Path=IsChecked}" Text="15001" TextChanged="P2PortBox_TextChanged"/>
-        <TextBlock x:Name="P1PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red"/>
-        <TextBlock x:Name="P2PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="2" Foreground="Red"/>
-        <Button x:Name="OkButton" Grid.Row="10" Grid.Column="4" Content="OK" Margin="0,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30" Width="80" Click="OkButton_Click"/>
+        <TextBlock Text="ポート番号" Grid.Row="9" Grid.Column="0" Margin="0,4,3,4" HorizontalAlignment="Right"/>
+        <TextBox x:Name="P1PortBox" Grid.Row="9" Grid.Column="1" Margin="2" IsEnabled="{Binding ElementName=P1AIToggle, Path=IsChecked}" Text="15000" TextChanged="P1PortBox_TextChanged"/>
+        <TextBlock Text="ポート番号" Grid.Row="9" Grid.Column="3" Margin="0,4,3,4" HorizontalAlignment="Right"/>
+        <TextBox x:Name="P2PortBox" Grid.Row="9" Grid.Column="4" Margin="2" IsEnabled="{Binding ElementName=P2AIToggle, Path=IsChecked}" Text="15001" TextChanged="P2PortBox_TextChanged"/>
+        <TextBlock x:Name="P1PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" Margin="0,0,0,93"/>
+        <TextBlock x:Name="P2PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="11" Grid.Column="3" Grid.ColumnSpan="2" Foreground="Red" Margin="0,0,0,93"/>
+        <Button x:Name="OkButton" Grid.Row="10" Grid.Column="4" Content="OK" Margin="0,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30" Width="80" Click="OkButton_Click" Grid.RowSpan="2"/>
     </Grid>
 </Window>
