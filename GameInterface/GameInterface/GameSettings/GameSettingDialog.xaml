@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameInterface.GameSettings"
         mc:Ignorable="d"
-        Title="ゲーム設定" Height="450" Width="600">
+        Title="ゲーム設定" Height="600" Width="600">
     <Window.Resources>
         <ResourceDictionary Source="Styles.xaml"/>
     </Window.Resources>
