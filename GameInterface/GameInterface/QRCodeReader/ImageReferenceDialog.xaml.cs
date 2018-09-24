@@ -48,6 +48,19 @@ namespace GameInterface.QRCodeReader
             else
                 this.Close();
         }
+
+        public static bool ShowDialog(out string ResultText)
+        {
+            ResultText = null;
+            ImageReferenceDialog dig = new ImageReferenceDialog();
+            dig.ShowDialog();
+            if (dig.DialogResult == true)
+            {
+                ResultText = dig.DataContext.ResultText;
+                return true;
+            }
+            return false;
+        }
     }
 
     public class ImageReferenceViewModel : ViewModels.ViewModelBase

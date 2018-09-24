@@ -60,6 +60,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.1\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -104,12 +105,16 @@
     </Compile>
     <Compile Include="Order.cs" />
     <Compile Include="QRCodeReader\BitmapSourceLuminanceSourceEx.cs" />
+    <Compile Include="QRCodeReader\EnemyAgentSelectDialog.xaml.cs">
+      <DependentUpon>EnemyAgentSelectDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="QRCodeReader\ImageReferenceDialog.xaml.cs">
       <DependentUpon>ImageReferenceDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="QRCodeReader\QRCodeReaderDialog.xaml.cs">
       <DependentUpon>QRCodeReaderDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="QRCodeReader\QRCodeTextParser.cs" />
     <Compile Include="ScoreCalculator.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="TeamColor.cs" />
@@ -155,6 +160,9 @@
     </Compile>
     <Page Include="OrderButtonUserControl.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="QRCodeReader\EnemyAgentSelectDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="QRCodeReader\ImageReferenceDialog.xaml">

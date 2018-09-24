@@ -25,5 +25,7 @@ namespace GameInterface
 
         public int CompareTo(Point other)
             => X == other.X && Y == other.Y ? 0 : 1;
+
+        public override string ToString() => "(" + X.ToString() + "," + Y.ToString() + ")";
     }
 }

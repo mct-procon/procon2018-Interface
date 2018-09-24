@@ -45,7 +45,7 @@ namespace GameInterface.QRCodeReader
             this.Close();
         }
 
-        public bool ShowDialog(out string ResultText)
+        public static bool ShowDialog(out string ResultText)
         {
             ResultText = null;
             QRCodeReaderDialog dig = new QRCodeReaderDialog();

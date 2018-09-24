@@ -56,6 +56,39 @@ namespace GameInterface.GameSettings
         /// </summary>
         internal bool IsUser2P => port2P == 0;
 
+        private byte boardCreationState = 0;
+
+        /// <summary>
+        /// Board Creation State
+        /// </summary>
+        public byte _BoardCreationState {
+            get => boardCreationState;
+            set => RaisePropertyChanged(ref boardCreationState, value);
+        }
+
+        internal BoardCreation BoardCreation => _BoardCreationState == 0 ? BoardCreation.Random : BoardCreation.QRCode;
+
+        internal Cells.Cell[,] QCCell { get; set; }
+        internal Agent[] QCAgent { get; set; }
+
+        private string _QCCAMText = "";
+        /// <summary>
+        /// QR Code Text from Camera.
+        /// </summary>
+        public string QCCAMText {
+            get => _QCCAMText;
+            set => RaisePropertyChanged(ref _QCCAMText, value);
+        }
+
+        private string _QCIMGText = "";
+        /// <summary>
+        /// QR Code Text from Image.
+        /// </summary>
+        public string QCIMGText {
+            get => _QCIMGText;
+            set => RaisePropertyChanged(ref _QCIMGText, value);
+        }
+
         private byte turns = 60;
 
         /// <summary>
@@ -114,5 +147,10 @@ namespace GameInterface.GameSettings
             get => isAutoSkip;
             set => isAutoSkip = value;
         }
+    }
+
+    public enum BoardCreation : byte
+    {
+        Random = 0, QRCode = 1
     }
 }

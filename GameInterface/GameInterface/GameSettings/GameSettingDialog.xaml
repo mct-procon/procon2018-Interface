@@ -39,7 +39,7 @@
         <CheckBox Content="自動ターンエンド" Grid.Row="2" Grid.Column="1" IsChecked="{Binding IsAutoSkip}"/>
 
         <TextBlock Text="フィールド設定" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
-        <TabControl Grid.Row="5" Grid.ColumnSpan="5" Margin="5">
+        <TabControl Grid.Row="5" Grid.ColumnSpan="5" Margin="5" SelectedIndex="{Binding _BoardCreationState}">
             <TabItem Header="乱数によって生成">
                 <Grid Margin="3">
                     <Grid.ColumnDefinitions>
@@ -59,14 +59,14 @@
             </TabItem>
             <TabItem Header="QRコード（画像ファイル）">
                 <Grid>
-                    <Button Content="参照" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="30" Margin="5,5,0,0"/>
-                    <TextBox Height="60" Margin="5,40,5,5" IsReadOnly="True"/>
+                    <Button Content="参照" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="30" Margin="5,5,0,0" Click="ShowQRImage_Click"/>
+                    <TextBox Height="60" Margin="5,40,5,5" IsReadOnly="True" Text="{Binding QCIMGText}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="QRコード（カメラ）">
                 <Grid>
-                    <Button Content="撮影" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="30" Margin="5,5,0,0"/>
-                    <TextBox Height="60" Margin="5,40,5,5" IsReadOnly="True"/>
+                    <Button Content="撮影" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="30" Margin="5,5,0,0" Click="ShowQRCamera_Click"/>
+                    <TextBox Height="60" Margin="5,40,5,5" IsReadOnly="True" Text="{Binding QCCAMText}"/>
                 </Grid>
             </TabItem>
             <!--<TabItem Header="保存した盤面から">

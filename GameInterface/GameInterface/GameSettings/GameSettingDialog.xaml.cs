@@ -121,6 +121,23 @@ namespace GameInterface.GameSettings
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
+            switch(DataContext._BoardCreationState)
+            {
+                case 1:
+                    if (string.IsNullOrEmpty(DataContext.QCIMGText))
+                    {
+                        MessageBox.Show("画像ファイルを参照してQRコードを読み込んでください．", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+                    break;
+                case 2:
+                    if (string.IsNullOrEmpty(DataContext.QCCAMText))
+                    {
+                        MessageBox.Show("カメラで撮影してQRコードを読み込んでください．", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+                    break;
+            }
             DialogResult = true;
             Close();
         }
@@ -133,6 +150,45 @@ namespace GameInterface.GameSettings
         private void HeightBox_RandomButton_Click(object sender, RoutedEventArgs e)
         {
             DataContext.BoardHeight = (byte)randomer.Next(4, 13);
+        }
+
+        private void ShowQRCamera_Click(object sender, RoutedEventArgs e)
+        {
+            QRCodeReader.QRCodeReaderDialog.ShowDialog(out string result);
+            if (result != null)
+            {
+                try
+                {
+                    QRCodeReader.QRCodeTextParser.Parse(result, out Cells.Cell[,] cells, out Agent[] agents);
+                    DataContext.QCCell = cells;
+                    DataContext.QCAgent = agents;
+                    DataContext.QCCAMText = result;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "QR Code Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            //QRCodeReader.QRCodeTextParser.Parse("8 11:-2 1 0 1 2 0 2 1 0 1 -2:1 3 2 -2 0 1 0 -2 2 3 1:1 3 2 1 0 -2 0 1 2 3 1:2 1 1 2 2 3 2 2 1 1 2:2 1 1 2 2 3 2 2 1 1 2:1 3 2 1 0 -2 0 1 2 3 1:1 3 2 -2 0 1 0 -2 2 3 1:-2 1 0 1 2 0 2 1 0 1 -2:2 2:7 10:", out Cells.Cell[,] hoge, out Agent[] fuga);
+        }
+
+        private void ShowQRImage_Click(object sender, RoutedEventArgs e)
+        {
+            QRCodeReader.ImageReferenceDialog.ShowDialog(out string result);
+            if (result != null)
+            {
+                try
+                {
+                    QRCodeReader.QRCodeTextParser.Parse(result, out Cells.Cell[,] cells, out Agent[] agents);
+                    DataContext.QCCell = cells;
+                    DataContext.QCAgent = agents;
+                    DataContext.QCIMGText = result;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "QR Code Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }
