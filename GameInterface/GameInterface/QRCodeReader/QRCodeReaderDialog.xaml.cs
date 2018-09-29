@@ -110,7 +110,7 @@ namespace GameInterface.QRCodeReader
                 return;
             }
             Locker.Reset();
-            CameraSource = new VideoCapture();
+            CameraSource = new VideoCapture(CurrentCameraID);
             if(!CameraSource.IsOpened())
             {
                 CameraSource = null;

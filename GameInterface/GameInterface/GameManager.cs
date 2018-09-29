@@ -313,7 +313,7 @@ namespace GameInterface
             for (i = 0; i < Constants.AgentsNum; i++)
             {
                 if (canAction[i]) { ret.Add(i); }
-                else { MessageBox.Show(i.ToString()); }
+                //else { MessageBox.Show(i.ToString()); }
             }
             return ret;
         }

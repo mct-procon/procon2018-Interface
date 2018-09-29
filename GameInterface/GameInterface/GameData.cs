@@ -159,12 +159,12 @@ namespace GameInterface
                 switch(posState)
                 {
                     case QRCodeReader.AgentPositioningState.Horizontal:
-                        _Agents[2].Point = new Point(_Agents[0].Point.X, settings.BoardHeight - _Agents[0].Point.Y);
-                        _Agents[3].Point = new Point(_Agents[1].Point.X, settings.BoardHeight - _Agents[1].Point.Y);
+                        _Agents[2].Point = new Point(_Agents[0].Point.X, settings.BoardHeight - 1 - _Agents[0].Point.Y);
+                        _Agents[3].Point = new Point(_Agents[1].Point.X, settings.BoardHeight - 1 - _Agents[1].Point.Y);
                         break;
                     case QRCodeReader.AgentPositioningState.Vertical:
-                        _Agents[2].Point = new Point(settings.BoardWidth - _Agents[0].Point.X, _Agents[0].Point.Y);
-                        _Agents[3].Point = new Point(settings.BoardWidth - _Agents[1].Point.X, _Agents[1].Point.Y);
+                        _Agents[2].Point = new Point(settings.BoardWidth - 1 - _Agents[0].Point.X, _Agents[0].Point.Y);
+                        _Agents[3].Point = new Point(settings.BoardWidth - 1 - _Agents[1].Point.X, _Agents[1].Point.Y);
                         break;
                 }
                 Agents = _Agents;
@@ -172,7 +172,7 @@ namespace GameInterface
                 {
                     Agents[i].playerNum = i / Agents.Length;
                     CellData[Agents[i].Point.X, Agents[i].Point.Y].AreaState_ =
-                        i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+                        i / Agents.Length == 0 ? TeamColor.Area1P : TeamColor.Area2P;
                 }
             }
         }
