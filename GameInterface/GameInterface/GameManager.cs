@@ -78,8 +78,8 @@ namespace GameInterface
             data.SecondCount++;
             if (data.SecondCount == data.TimeLimitSeconds)
             {
-                EndTurn();
                 data.IsNextTurnStart = false;
+                EndTurn();
             }
         }
 

@@ -82,7 +82,7 @@ namespace GameInterface
             App.Current.Exit += (obj, e) =>
             {
                 foreach (var man in managers)
-                    man?.ShutdownServer();
+                    man?.Shutdown();
             };
         }
 
@@ -167,7 +167,7 @@ namespace GameInterface
         private void SendTurnEnd(int playerNum)
         {
             if (!isConnected[playerNum]) return;
-            managers[playerNum].Write(DataKind.TurnEnd, new TurnEnd((byte)data.NowTurn));
+            managers[playerNum].Write(DataKind. TurnEnd, new TurnEnd((byte)data.NowTurn));
         }
 
         public void SendGameEnd()
