@@ -76,7 +76,7 @@ namespace GameInterface
         {
             if (!data.IsNextTurnStart) return;
             data.SecondCount++;
-            if (data.SecondCount == data.TimeLimitSeconds)
+            if (data.SecondCount == data.TimeLimitSeconds || server.IsDecidedReceived.All(b => b))
             {
                 data.IsNextTurnStart = false;
                 EndTurn();

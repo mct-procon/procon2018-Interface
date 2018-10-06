@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MCTProcon29Protocol.Methods;
 using MCTProcon29Protocol;
+using System.Threading;
 
 namespace GameInterface
 {
@@ -75,6 +76,8 @@ namespace GameInterface
             set => RaisePropertyChanged(ref isConnected[1], value);
         }
 
+        public bool[] IsDecidedReceived = new bool[] { false, false };
+
         public Server(GameManager gameManager)
         {
             this.gameManager = gameManager;
@@ -133,6 +136,7 @@ namespace GameInterface
 
         private void SendTurnStart(int playerNum)
         {
+            IsDecidedReceived[playerNum] = false;
             if (!isConnected[playerNum]) return;
 
             ColoredBoardSmallBigger colorBoardMe = new ColoredBoardSmallBigger((uint)data.BoardWidth, (uint)data.BoardHeight);
@@ -166,6 +170,7 @@ namespace GameInterface
 
         private void SendTurnEnd(int playerNum)
         {
+            IsDecidedReceived[playerNum] = true;
             if (!isConnected[playerNum]) return;
             managers[playerNum].Write(DataKind. TurnEnd, new TurnEnd((byte)data.NowTurn));
         }
@@ -177,6 +182,11 @@ namespace GameInterface
             {
                 if (!isConnected[i]) continue;
                 managers[i].Write(DataKind.GameEnd, new GameEnd(score, enemyScore));
+                Task.Run(() =>
+                {
+                    Thread.Sleep(1000);
+                    managers[i].Shutdown();
+                });
                 Swap<int>(ref score, ref enemyScore);
             }
         }

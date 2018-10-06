@@ -138,6 +138,7 @@ namespace GameInterface
             viewModel.gameManager.TimerStop();
             if (GameSettings.GameSettingDialog.ShowDialog(out var result))
             {
+                viewModel.gameManager.server.SendGameEnd();
                 InitGame(result);
                 if (!(result.IsUser1P & result.IsUser2P))
                     (new GameSettings.WaitForAIDialog(viewModel.gameManager.server, result)).ShowDialog();
