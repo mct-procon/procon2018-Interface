@@ -94,12 +94,12 @@ namespace GameInterface
             if (!settings.IsUser1P)
             {
                 managers[0] = new IPCManager(new ClientRennenend(this, gameManager, 0));
-                managers[0].Start(settings.Port1P);
+                Task.Run(() => managers[0].Start(settings.Port1P));
             }
             if (!settings.IsUser2P)
             {
                 managers[1] = new IPCManager(new ClientRennenend(this, gameManager, 1));
-                managers[1].Start(settings.Port2P);
+                Task.Run(() => managers[1].Start(settings.Port2P));
             }
         }
 
@@ -182,10 +182,11 @@ namespace GameInterface
             {
                 if (!isConnected[i]) continue;
                 managers[i].Write(DataKind.GameEnd, new GameEnd(score, enemyScore));
+                int n = i;
                 Task.Run(() =>
                 {
                     Thread.Sleep(1000);
-                    managers[i].Shutdown();
+                    managers[n].Shutdown();
                 });
                 Swap<int>(ref score, ref enemyScore);
             }
