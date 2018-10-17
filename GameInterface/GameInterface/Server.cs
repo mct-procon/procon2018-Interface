@@ -175,7 +175,7 @@ namespace GameInterface
             managers[playerNum].Write(DataKind. TurnEnd, new TurnEnd((byte)data.NowTurn));
         }
 
-        public void SendGameEnd()
+        public void SendGameEnd(bool isUseSameAI)
         {
             int score = data.PlayerScores[0], enemyScore = data.PlayerScores[1];
             for (int i = 0; i < Constants.PlayersNum; i++)
@@ -183,11 +183,14 @@ namespace GameInterface
                 if (!isConnected[i]) continue;
                 managers[i].Write(DataKind.GameEnd, new GameEnd(score, enemyScore));
                 int n = i;
-                Task.Run(() =>
+                if (!isUseSameAI)
                 {
-                    Thread.Sleep(1000);
-                    managers[n].Shutdown();
-                });
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(1000);
+                        managers[n].Shutdown();
+                    });
+                }
                 Swap<int>(ref score, ref enemyScore);
             }
         }

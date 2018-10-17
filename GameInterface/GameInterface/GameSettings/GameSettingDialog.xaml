@@ -29,6 +29,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Text="ゲーム設定" FontSize="42" Grid.ColumnSpan="4"/>
@@ -106,6 +107,7 @@
         <TextBox x:Name="P2PortBox" Grid.Row="9" Grid.Column="4" Margin="2" IsEnabled="{Binding ElementName=P2AIToggle, Path=IsChecked}" Text="15001" TextChanged="P2PortBox_TextChanged"/>
         <TextBlock x:Name="P1PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" Margin="0,0,0,93"/>
         <TextBlock x:Name="P2PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="11" Grid.Column="3" Grid.ColumnSpan="2" Foreground="Red" Margin="0,0,0,93"/>
-        <Button x:Name="OkButton" Grid.Row="10" Grid.Column="4" Content="OK" Margin="0,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30" Width="80" Click="OkButton_Click" Grid.RowSpan="2"/>
+        <CheckBox Content="同じAIでプレイする" Grid.Row="11" Grid.Column="1" IsChecked="{Binding IsUseSameAI}"/>
+        <Button x:Name="OkButton" Grid.Row="11" Grid.Column="4" Content="OK" Margin="0,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30" Width="80" Click="OkButton_Click" Grid.RowSpan="2"/>
     </Grid>
 </Window>
