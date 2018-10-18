@@ -147,6 +147,17 @@ namespace GameInterface.GameSettings
             get => isAutoSkip;
             set => isAutoSkip = value;
         }
+
+        private bool isUseSameAI = false;
+
+        /// <summary>
+        /// Whether the AI used in before game use.
+        /// </summary>
+        public bool IsUseSameAI
+        {
+            get => isUseSameAI;
+            set => isUseSameAI = value;
+        }
     }
 
     public enum BoardCreation : byte

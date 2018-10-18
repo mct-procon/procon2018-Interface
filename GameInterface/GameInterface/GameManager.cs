@@ -29,6 +29,7 @@ namespace GameInterface
         {
             server.SendGameInit();
             InitDispatcherTimer();
+            ResetOrder();
             StartTurn();
             GetScore();
             data.IsGameStarted = true;
@@ -104,7 +105,7 @@ namespace GameInterface
             }
             else
             {
-                server.SendGameEnd();
+                server.SendGameEnd(true);
             }
         }
 
@@ -148,7 +149,7 @@ namespace GameInterface
             return -1;
         }
 
-        private void WarpAgent(Agent agent,Point point)
+        private void WarpAgent(Agent agent, Point point)
         {
             data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
             agent.Point = point;
@@ -165,7 +166,7 @@ namespace GameInterface
             List<int> ActionableAgentsId = GetActionableAgentsId();
 
             // Erase Agent Location's data from cells.
-            foreach(var a in data.Agents)
+            foreach (var a in data.Agents)
                 data.CellData[a.Point.X, a.Point.Y].AgentState = TeamColor.Free;
 
             for (int i = 0; i < ActionableAgentsId.Count; i++)
@@ -385,6 +386,16 @@ namespace GameInterface
         {
             data.Agents[order.agentNum].AgentState = order.state;
             data.Agents[order.agentNum].AgentDirection = order.direction;
+            viewModel.Agents = data.Agents;
+        }
+
+        private void ResetOrder()
+        {
+            foreach (var agent in data.Agents )
+            {
+                agent.AgentDirection = Agent.Direction.NONE;
+                agent.AgentState = Agent.State.MOVE;
+            }
             viewModel.Agents = data.Agents;
         }
 
