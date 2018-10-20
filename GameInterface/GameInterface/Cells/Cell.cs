@@ -29,6 +29,12 @@ namespace GameInterface.Cells
             set => RaisePropertyChanged(ref agentState, value);
         }
 
+        private TeamColor surroundedState = TeamColor.Free;
+        public TeamColor SurroundedState {
+            get => surroundedState;
+            set => RaisePropertyChanged(ref surroundedState, value);
+        }
+
         public Cell() { }
         public Cell(int _score)
         {

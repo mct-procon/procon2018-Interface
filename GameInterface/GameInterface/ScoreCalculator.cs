@@ -14,7 +14,6 @@ namespace GameInterface
         private static uint width;
         private static readonly int[] DirectionX = new int[] { 1, 0, -1, 0 };
         private static readonly int[] DirectionY = new int[] { 0, 1, 0, -1 };
-        private static bool[,] isSearched;
 
         public static void Init(uint height_, uint width_)
         {
@@ -42,8 +41,10 @@ namespace GameInterface
             for (uint x = 0; x < width; ++x)
                 for (uint y = 0; y < height; ++y)
                     if (!checker[x, y])
+                    {
                         result += Math.Abs(cells[x, y].Score);
-
+                        cells[x, y].SurroundedState |= state;
+                    }
             return result;
         }
 

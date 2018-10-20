@@ -100,6 +100,7 @@ namespace GameInterface
         {
             Data.IsNextTurnStart = true;
             MoveAgents();
+            GetScore();
             Data.SecondCount = 0;
             Server.SendTurnStart();
         }
@@ -108,7 +109,6 @@ namespace GameInterface
         {
             if (!Data.IsGameStarted) return;
             Server.SendTurnEnd();
-            GetScore();
             if (Data.NowTurn < Data.FinishTurn)
             {
                 Data.NowTurn++;
@@ -342,6 +342,9 @@ namespace GameInterface
 
         private void GetScore()
         {
+            for (int x = 0; x < Data.CellData.GetLength(0); ++x)
+                for (int y = 0; y < Data.CellData.GetLength(1); ++y)
+                    Data.CellData[x, y].SurroundedState = TeamColor.Free;
             for (int i = 0; i < Constants.PlayersNum; i++)
                 Data.PlayerScores[i] = ScoreCalculator.CalcScore(i, Data.CellData);
             viewModel.PlayerScores = Data.PlayerScores;

@@ -31,6 +31,15 @@
                 <DataTrigger Binding="{Binding AgentState}" Value="{x:Static local:TeamColor.Free}">
                     <Setter Property="Foreground" Value="Black"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding SurroundedState}" Value="{x:Static local:TeamColor.Area1P}">
+                    <Setter Property="Foreground" Value="Blue"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SurroundedState}" Value="{x:Static local:TeamColor.Area2P}">
+                    <Setter Property="Foreground" Value="Red"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SurroundedState}" Value="{x:Static local:TeamColor.Both}">
+                    <Setter Property="Foreground" Value="DarkGreen"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
