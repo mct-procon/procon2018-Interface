@@ -35,6 +35,11 @@ namespace GameInterface.GameSettings
             PlayerText.Text = (playerNum + 1).ToString() + "P";
             InitializeComponent();
             serverData.PropertyChanged += __serverDataPropertyChanged;
+            if (playerNum == 0 ? DataContext.IsConnected1P : DataContext.IsConnected2P)
+            {
+                DataContext.PropertyChanged -= __serverDataPropertyChanged;
+                this.Close();
+            }
         }
 
         private void __serverDataPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

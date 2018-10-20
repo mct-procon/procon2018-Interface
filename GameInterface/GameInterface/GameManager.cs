@@ -117,7 +117,7 @@ namespace GameInterface
             }
             else
             {
-                Server.SendGameEnd(true);
+                Server.SendGameEnd();
             }
         }
 

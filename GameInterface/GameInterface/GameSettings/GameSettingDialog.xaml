@@ -4,12 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameInterface.GameSettings"
+        xmlns:conv="clr-namespace:GameInterface.ValueConvertes"
         mc:Ignorable="d"
         Title="ゲーム設定" Height="600" Width="600">
     <Window.Resources>
         <ResourceDictionary Source="Styles.xaml"/>
     </Window.Resources>
     <Grid Margin="10">
+        <Grid.Resources>
+            <conv:BooleanNotConverter x:Key="BooleanNotConverter"/>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="1*"/>
@@ -25,9 +29,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -74,40 +75,58 @@
 
             </TabItem>-->
         </TabControl>
+        
+        <CheckBox x:Name="SameAICheckBox" Content="同じAIでプレイする（1P設定，2P設定は変更されません)" Margin="10" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="5" IsChecked="{Binding IsUseSameAI}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-        <TextBlock Text="1P設定" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
-        <TextBlock Text="2P設定" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
-        <Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Height="30" Margin="3">
-            <Grid.Resources>
-                <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton} }">
-                </Style>
-            </Grid.Resources>
+        <Grid Grid.Row="8" Grid.ColumnSpan="5" IsEnabled="{Binding IsChecked, ElementName=SameAICheckBox, Converter={StaticResource BooleanNotConverter}, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <RadioButton x:Name="P1UserToggle" Content="ユーザ" IsChecked="true" Checked="P1UserToggle_Checked"/>
-            <RadioButton x:Name="P1AIToggle" Content="AI" Grid.Column="1" Checked="P1AIToggle_Checked"/>
+            <TextBlock Text="1P設定" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
+            <TextBlock Text="2P設定" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Height="30" Margin="3">
+                <Grid.Resources>
+                    <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton} }">
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <RadioButton x:Name="P1UserToggle" Content="ユーザ" IsChecked="true" Checked="P1UserToggle_Checked"/>
+                <RadioButton x:Name="P1AIToggle" Content="AI" Grid.Column="1" Checked="P1AIToggle_Checked"/>
+            </Grid>
+            <Grid Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Height="30" Margin="3">
+                <Grid.Resources>
+                    <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton} }">
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <RadioButton x:Name="P2UserToggle" Content="ユーザ" IsChecked="true" Checked="P2UserToggle_Checked"/>
+                <RadioButton x:Name="P2AIToggle" Content="AI" Grid.Column="1" Checked="P2AIToggle_Checked"/>
+            </Grid>
+            <TextBlock Text="ポート番号" Grid.Row="2" Grid.Column="0" Margin="0,4,3,4" HorizontalAlignment="Right"/>
+            <TextBox x:Name="P1PortBox" Grid.Row="2" Grid.Column="1" Margin="2" IsEnabled="{Binding ElementName=P1AIToggle, Path=IsChecked}" Text="15000" TextChanged="P1PortBox_TextChanged"/>
+            <TextBlock Text="ポート番号" Grid.Row="2" Grid.Column="3" Margin="0,4,3,4" HorizontalAlignment="Right"/>
+            <TextBox x:Name="P2PortBox" Grid.Row="2" Grid.Column="4" Margin="2" IsEnabled="{Binding ElementName=P2AIToggle, Path=IsChecked}" Text="15001" TextChanged="P2PortBox_TextChanged"/>
+            <TextBlock x:Name="P1PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" Margin="0,0,0,93"/>
+            <TextBlock x:Name="P2PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Foreground="Red" Margin="0,0,0,93"/>
         </Grid>
-        <Grid Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" Height="30" Margin="3">
-            <Grid.Resources>
-                <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton} }">
-                </Style>
-            </Grid.Resources>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <RadioButton x:Name="P2UserToggle" Content="ユーザ" IsChecked="true" Checked="P2UserToggle_Checked"/>
-            <RadioButton x:Name="P2AIToggle" Content="AI" Grid.Column="1" Checked="P2AIToggle_Checked"/>
-        </Grid>
-        <TextBlock Text="ポート番号" Grid.Row="9" Grid.Column="0" Margin="0,4,3,4" HorizontalAlignment="Right"/>
-        <TextBox x:Name="P1PortBox" Grid.Row="9" Grid.Column="1" Margin="2" IsEnabled="{Binding ElementName=P1AIToggle, Path=IsChecked}" Text="15000" TextChanged="P1PortBox_TextChanged"/>
-        <TextBlock Text="ポート番号" Grid.Row="9" Grid.Column="3" Margin="0,4,3,4" HorizontalAlignment="Right"/>
-        <TextBox x:Name="P2PortBox" Grid.Row="9" Grid.Column="4" Margin="2" IsEnabled="{Binding ElementName=P2AIToggle, Path=IsChecked}" Text="15001" TextChanged="P2PortBox_TextChanged"/>
-        <TextBlock x:Name="P1PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" Margin="0,0,0,93"/>
-        <TextBlock x:Name="P2PortBoxErrorMessage" Visibility="Collapsed" Grid.Row="11" Grid.Column="3" Grid.ColumnSpan="2" Foreground="Red" Margin="0,0,0,93"/>
-        <CheckBox Content="同じAIでプレイする" Grid.Row="11" Grid.Column="1" IsChecked="{Binding IsUseSameAI}"/>
+
         <Button x:Name="OkButton" Grid.Row="11" Grid.Column="4" Content="OK" Margin="0,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="30" Width="80" Click="OkButton_Click" Grid.RowSpan="2"/>
     </Grid>
 </Window>

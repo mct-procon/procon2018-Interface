@@ -133,15 +133,30 @@ namespace GameInterface
 
         public void StartListening(GameSettings.SettingStructure settings)
         {
+            if (settings.IsUseSameAI) return;
             if (!settings.IsUser1P)
             {
-                managers[0] = new IPCManager(new ClientRennenend(this, gameManager, 0));
-                Task.Run(() => managers[0].Start(settings.Port1P));
+                if (isConnected[0])
+                {
+                    Shutdown(0);
+                }
+                else
+                {
+                    managers[0] = new IPCManager(new ClientRennenend(this, gameManager, 0));
+                    Task.Run(() => managers[0].Start(settings.Port1P));
+                }
             }
             if (!settings.IsUser2P)
             {
-                managers[1] = new IPCManager(new ClientRennenend(this, gameManager, 1));
-                Task.Run(() => managers[1].Start(settings.Port2P));
+                if (isConnected[1])
+                {
+                    Shutdown(1);
+                }
+                else
+                {
+                    managers[1] = new IPCManager(new ClientRennenend(this, gameManager, 1));
+                    Task.Run(() => managers[1].Start(settings.Port2P));
+                }
             }
         }
 
@@ -236,28 +251,27 @@ namespace GameInterface
             managers[playerNum].Write(DataKind. TurnEnd, new TurnEnd((byte)data.NowTurn));
         }
 
-        public void SendGameEnd(bool isUseSameAI)
+        public void SendGameEnd()
         {
             int score = data.PlayerScores[0], enemyScore = data.PlayerScores[1];
             for (int i = 0; i < Constants.PlayersNum; i++)
             {
                 if (!isConnected[i]) continue;
                 managers[i].Write(DataKind.GameEnd, new GameEnd(score, enemyScore));
-                int n = i;
-                if (!isUseSameAI)
-                {
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(1000);
-                        managers[n].Shutdown();
-                    });
-                }
                 Swap<int>(ref score, ref enemyScore);
             }
         }
 
-        public void Shutdown(int playerNum) =>
+        public void Shutdown(int playerNum) {
+            if (!isConnected[playerNum]) return;
             managers[playerNum]?.Shutdown();
+        }
+
+        public void Shutdown()
+        {
+            Shutdown(0);
+            Shutdown(1);
+        }
 
         private void Swap<T>(ref T lhs, ref T rhs)
         {

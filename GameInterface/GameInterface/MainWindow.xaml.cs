@@ -136,9 +136,10 @@ namespace GameInterface
         private void NewGameMenu_Clicked(object sender, RoutedEventArgs e)
         {
             viewModel.gameManager.TimerStop();
+            if (viewModel != null && viewModel.gameManager != null && viewModel.gameManager.Data != null && viewModel.gameManager.Data.IsGameStarted && (viewModel.gameManager.Data.NowTurn < viewModel.gameManager.Data.FinishTurn))
+                viewModel.gameManager.Server.SendGameEnd();
             if (GameSettings.GameSettingDialog.ShowDialog(out var result))
             {
-                viewModel.gameManager.Server.SendGameEnd(result.IsUseSameAI);
                 InitGame(result);
                 if (!(result.IsUser1P & result.IsUser2P))
                     (new GameSettings.WaitForAIDialog(viewModel.gameManager.Server, result)).ShowDialog();

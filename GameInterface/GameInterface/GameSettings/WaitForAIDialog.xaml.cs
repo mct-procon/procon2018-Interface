@@ -36,10 +36,6 @@ namespace GameInterface.GameSettings
             SettingStruct = settings;
             InitializeComponent();
             serverData.PropertyChanged += __serverDataPropertyChanged;
-            if (settings.IsUser1P)
-                Text1P.Visibility = ( Progress1P.Visibility =  Visibility.Hidden);
-            if (settings.IsUser2P)
-                Text2P.Visibility = (Progress2P.Visibility = Visibility.Hidden);
         }
 
         private void __serverDataPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -64,6 +60,32 @@ namespace GameInterface.GameSettings
             {
                 DataContext.PropertyChanged -= __serverDataPropertyChanged;
                 Dispatcher.BeginInvoke((Action)(() => this.Close()));
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            if ((SettingStruct.IsUser1P | DataContext.IsConnected1P))
+            {
+                Text1P.Visibility = ( Progress1P.Visibility =  Visibility.Hidden);
+                Progress1P.IsIndeterminate = false;
+                Progress1P.Value = 0;
+                DoubleAnimation anime = new DoubleAnimation(0, 100, TimeSpan.FromSeconds(1));
+                Progress1P.BeginAnimation(ProgressBar.ValueProperty, anime);
+            }
+            if ((SettingStruct.IsUser2P | DataContext.IsConnected2P))
+            {
+                Text2P.Visibility = (Progress2P.Visibility = Visibility.Hidden);
+                Progress2P.IsIndeterminate = false;
+                Progress2P.Value = 0;
+                DoubleAnimation anime = new DoubleAnimation(0, 100, TimeSpan.FromSeconds(1));
+                Progress2P.BeginAnimation(ProgressBar.ValueProperty, anime);
+            }
+            if ((Progress1P.IsIndeterminate | Progress2P.IsIndeterminate) == false)
+            {
+                DataContext.PropertyChanged -= __serverDataPropertyChanged;
+                this.Close();
             }
         }
     }
