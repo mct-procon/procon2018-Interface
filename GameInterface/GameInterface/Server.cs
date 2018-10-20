@@ -85,7 +85,13 @@ namespace GameInterface
             App.Current.Exit += (obj, e) =>
             {
                 foreach (var man in managers)
-                    man?.Shutdown();
+                {
+                    try
+                    {
+                        man?.Shutdown();
+                    }
+                    catch { }
+                }
             };
         }
 
