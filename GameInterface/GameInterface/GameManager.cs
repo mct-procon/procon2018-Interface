@@ -30,6 +30,7 @@ namespace GameInterface
             server.SendGameInit();
             InitDispatcherTimer();
             ResetOrder();
+            ScoreCalculator.Init((uint)data.BoardHeight, (uint)data.BoardWidth);
             StartTurn();
             GetScore();
             data.IsGameStarted = true;
@@ -331,7 +332,7 @@ namespace GameInterface
         private void GetScore()
         {
             for (int i = 0; i < Constants.PlayersNum; i++)
-                data.PlayerScores[i] = ScoreCalculator.CalcScore(i, data.BoardHeight, data.BoardWidth, data.CellData);
+                data.PlayerScores[i] = ScoreCalculator.CalcScore(i, data.CellData);
             viewModel.PlayerScores = data.PlayerScores;
         }
 

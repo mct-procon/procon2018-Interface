@@ -4,84 +4,129 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using GameInterface.Cells;
+using MCTProcon29Protocol;
 
 namespace GameInterface
 {
     static class ScoreCalculator
     {
-        private static int[,] areaStateSearchMap; //未探索 -1 外側 0 内側 1 自陣 2
-        private static int height;
-        private static int width;
+        private static uint height;
+        private static uint width;
         private static readonly int[] DirectionX = new int[] { 1, 0, -1, 0 };
         private static readonly int[] DirectionY = new int[] { 0, 1, 0, -1 };
         private static bool[,] isSearched;
-        public static int CalcScore(int playerNum, int height_, int width_, Cell[,] cells)
+
+        public static void Init(uint height_, uint width_)
         {
-            int score = 0;
             height = height_;
             width = width_;
-            var state = playerNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    var cellData = cells[i, j];
-                    if (cellData.AreaState_ == state)
-                        score += cellData.Score;
-                }
-            }
-
-            areaStateSearchMap = new int[width, height]; //-1.未探索 0.外側 1.内側 2.自陣
-                                                         //囲まれた領域のポイント
-                                                         //自陣判定を先にしておく
-            for (int j = 0; j < width; j++)
-            {
-                for (int k = 0; k < height; k++)
-                {
-                    if (state == cells[j, k].AreaState_)
-                        areaStateSearchMap[j, k] = 2;
-                    else areaStateSearchMap[j, k] = -1;
-                }
-            }
-            //外側、内側の判定をする
-            for (int j = 0; j < width; j++)
-            {
-                for (int k = 0; k < height; k++)
-                {
-                    isSearched = new bool[width, height]; 
-                    if (areaStateSearchMap[j, k] != -1||j==3) continue;
-                    CheckIsInside(j, k);
-                }
-            }
-
-            //内側のものは絶対値を加算する
-            for (int j = 0; j < width; j++)
-            {
-                for (int k = 0; k < height; k++)
-                {
-                    if (areaStateSearchMap[j, k] == 1)
-                        score += Math.Abs(cells[j, k].Score);
-                }
-            }
-            return score;
         }
 
-        private static bool CheckIsInside(int x, int y)
+        public static int CalcScore(int playerNum, Cell[,] cells)
         {
-            if (areaStateSearchMap[x, y] == 2) return true;
-            isSearched[x, y] = true;
-            for (int i = 0; i < 4; i++)
-            {
-                int ny = y + DirectionY[i], nx = x + DirectionX[i];
-                if (nx < 0 || nx >= width || ny < 0 || ny >= height) return false;
-                if (isSearched[nx, ny]) continue;
-                if (!CheckIsInside(nx,ny))
+            ColoredBoardSmallBigger checker = new ColoredBoardSmallBigger(width, height);
+            int result = 0;
+            var state = playerNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+
+            for (uint x = 0; x < width; ++x)
+                for (uint y = 0; y < height; ++y)
                 {
-                    return false;
+                    if (cells[x, y].AreaState_ == state)
+                    {
+                        result += cells[x, y].Score;
+                        checker[x, y] = true;
+                    }
+                }
+            BadSpaceFill(ref checker, width, height);
+
+            for (uint x = 0; x < width; ++x)
+                for (uint y = 0; y < height; ++y)
+                    if (!checker[x, y])
+                        result += Math.Abs(cells[x, y].Score);
+
+            return result;
+        }
+
+        //uint[] myStack = new uint[1024];	//x, yの順で入れる. y, xの順で取り出す. width * height以上のサイズにする.
+        public static unsafe void BadSpaceFill(ref ColoredBoardSmallBigger Checker, uint width, uint height)
+        {
+            unchecked
+            {
+                MCTProcon29Protocol.Point* myStack = stackalloc MCTProcon29Protocol.Point[12 * 12];
+
+                MCTProcon29Protocol.Point point;
+                uint x, y, searchTo = 0, myStackSize = 0;
+
+                searchTo = height - 1;
+                for (x = 0; x < width; x++)
+                {
+                    if (!Checker[x, 0])
+                    {
+                        myStack[myStackSize++] = new MCTProcon29Protocol.Point(x, 0);
+                        Checker[x, 0] = true;
+                    }
+                    if (!Checker[x, searchTo])
+                    {
+                        myStack[myStackSize++] = new MCTProcon29Protocol.Point(x, searchTo);
+                        Checker[x, searchTo] = true;
+                    }
+                }
+
+                searchTo = width - 1;
+                for (y = 0; y < height; y++)
+                {
+                    if (!Checker[0, y])
+                    {
+                        myStack[myStackSize++] = new MCTProcon29Protocol.Point(0, y);
+                        Checker[0, y] = true;
+                    }
+                    if (!Checker[searchTo, y])
+                    {
+                        myStack[myStackSize++] = new MCTProcon29Protocol.Point(searchTo, y);
+                        Checker[searchTo, y] = true;
+                    }
+                }
+
+                while (myStackSize > 0)
+                {
+                    point = myStack[--myStackSize];
+                    x = point.X;
+                    y = point.Y;
+
+                    //左方向
+                    searchTo = x - 1;
+                    if (searchTo < width && !Checker[searchTo, y])
+                    {
+                        myStack[myStackSize++] = new MCTProcon29Protocol.Point(searchTo, y);
+                        Checker[searchTo, y] = true;
+                    }
+
+                    //下方向
+                    searchTo = y + 1;
+                    if (searchTo < height && !Checker[x, searchTo])
+                    {
+                        myStack[myStackSize++] = new MCTProcon29Protocol.Point(x, searchTo);
+                        Checker[x, searchTo] = true;
+                    }
+
+                    //右方向
+                    searchTo = x + 1;
+                    if (searchTo < width && !Checker[searchTo, y])
+                    {
+                        myStack[myStackSize++] = new MCTProcon29Protocol.Point(searchTo, y);
+                        Checker[searchTo, y] = true;
+                    }
+
+                    //上方向
+                    searchTo = y - 1;
+                    if (searchTo < height && !Checker[x, searchTo])
+                    {
+                        myStack[myStackSize++] = new MCTProcon29Protocol.Point(x, searchTo);
+                        Checker[x, searchTo] = true;
+                    }
                 }
             }
-            areaStateSearchMap[x, y] = 1;
-            return true;
         }
+
     }
 }
