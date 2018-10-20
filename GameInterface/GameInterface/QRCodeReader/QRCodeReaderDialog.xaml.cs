@@ -154,6 +154,7 @@ namespace GameInterface.QRCodeReader
                         WindowDispatcher.Invoke(() =>
                         {
                             ResultText = QrResult.Text;
+                            IsOkButtonEnabled = true;
                         });
                     }
                 }
@@ -165,8 +166,8 @@ namespace GameInterface.QRCodeReader
             Locker.Reset();
             cancellation.Cancel();
             Locker.Set();
-            CameraMat.Dispose();
-            CameraSource.Dispose();
+            CameraMat?.Dispose();
+            CameraSource?.Dispose();
         }
     }
 }

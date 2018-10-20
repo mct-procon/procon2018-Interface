@@ -170,9 +170,9 @@ namespace GameInterface
                 Agents = _Agents;
                 for (int i = 0; i < Agents.Length; ++i)
                 {
-                    Agents[i].playerNum = i / Agents.Length;
+                    Agents[i].playerNum = i / Constants.PlayersNum;
                     CellData[Agents[i].Point.X, Agents[i].Point.Y].AreaState_ =
-                        i / Agents.Length == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+                        i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
                 }
             }
         }

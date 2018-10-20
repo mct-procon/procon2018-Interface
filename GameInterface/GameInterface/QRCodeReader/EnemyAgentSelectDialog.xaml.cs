@@ -79,11 +79,11 @@ namespace GameInterface.QRCodeReader
         public void Init(int BoardWidth, int BoardHeight, Agent[] Agents)
         {
             // Horizontal
-            var enemy1 = new Point(Agents[0].Point.X, BoardHeight - Agents[0].Point.Y);
-            var enemy2 = new Point(Agents[1].Point.X, BoardHeight - Agents[1].Point.Y);
+            var enemy1 = new Point(Agents[0].Point.X, BoardHeight - Agents[0].Point.Y - 1);
+            var enemy2 = new Point(Agents[1].Point.X, BoardHeight - Agents[1].Point.Y - 1);
             HorizontalResultBitmap = Draw(BoardWidth, BoardHeight, new[] { Agents[0].Point, Agents[1].Point, enemy1, enemy2 });
-            enemy1 = new Point(BoardWidth - Agents[0].Point.X, Agents[0].Point.Y);
-            enemy2 = new Point(BoardWidth - Agents[1].Point.X, Agents[1].Point.Y);
+            enemy1 = new Point(BoardWidth - Agents[0].Point.X - 1, Agents[0].Point.Y);
+            enemy2 = new Point(BoardWidth - Agents[1].Point.X - 1, Agents[1].Point.Y);
             VerticalResultBitmap = Draw(BoardWidth, BoardHeight, new[] { Agents[0].Point, Agents[1].Point, enemy1, enemy2 });
         }
 
@@ -91,79 +91,24 @@ namespace GameInterface.QRCodeReader
         {
             WriteableBitmap Result = new WriteableBitmap(ImageSize, ImageSize, 96, 96, PixelFormats.Bgra32, null);
 
-            int CellSize = ImageSize / Math.Min(BoardWidth, BoardHeight);
+            int CellSize = ImageSize / Math.Max(BoardWidth, BoardHeight) - 1;
             int offsetX = (ImageSize - (CellSize * BoardWidth)) / 2;
             int offsetY = (ImageSize - (CellSize * BoardHeight)) / 2;
 
-            Result.Lock();
             for(int x = 0; x < BoardWidth; ++x)
                 for(int y = 0; y < BoardHeight; ++y)
                 {
-                    DrawRectangle(offsetX + (CellSize * x), offsetY + (CellSize * y), CellSize, CellSize, Result, Colors.LightGray, Colors.Gray);
+                    Result.DrawRectangle(offsetX + (CellSize * x), offsetY + (CellSize * y), offsetX + (CellSize * x) + CellSize, offsetY + (CellSize * y) + CellSize, Colors.DarkGray);
                 }
 
-            DrawRectangle(offsetX + (CellSize * Agents[0].X), offsetY + (CellSize * Agents[0].Y), CellSize, CellSize, Result, Colors.Blue, Colors.Gray);
-            DrawRectangle(offsetX + (CellSize * Agents[1].X), offsetY + (CellSize * Agents[1].Y), CellSize, CellSize, Result, Colors.Blue, Colors.Gray);
-            DrawRectangle(offsetX + (CellSize * Agents[2].X), offsetY + (CellSize * Agents[2].Y), CellSize, CellSize, Result, Colors.Red, Colors.Gray);
-            DrawRectangle(offsetX + (CellSize * Agents[3].X), offsetY + (CellSize * Agents[3].Y), CellSize, CellSize, Result, Colors.Red, Colors.Gray);
-
-            Result.Unlock();
+            Result.DrawRectangle(offsetX + (CellSize * Agents[0].X), offsetY + (CellSize * Agents[0].Y), offsetX + (CellSize * Agents[0].X) + CellSize, offsetY + (CellSize * Agents[0].Y) + CellSize, Colors.Blue);
+            Result.DrawRectangle(offsetX + (CellSize * Agents[1].X), offsetY + (CellSize * Agents[1].Y), offsetX + (CellSize * Agents[1].X) + CellSize, offsetY + (CellSize * Agents[1].Y) + CellSize, Colors.Blue);
+            Result.DrawRectangle(offsetX + (CellSize * Agents[2].X), offsetY + (CellSize * Agents[2].Y), offsetX + (CellSize * Agents[2].X) + CellSize, offsetY + (CellSize * Agents[2].Y) + CellSize, Colors.Red);
+            Result.DrawRectangle(offsetX + (CellSize * Agents[3].X), offsetY + (CellSize * Agents[3].Y), offsetX + (CellSize * Agents[3].X) + CellSize, offsetY + (CellSize * Agents[3].Y) + CellSize, Colors.Red);
 
             return Result;
         }
 
-        private unsafe void DrawRectangle(int leftX, int topY, int width, int height, WriteableBitmap bitmap, Color fillColor, Color borderColor)
-        {
-            int xMax = leftX + width;
-            int yMax = topY + height;
-            int channel = bitmap.Format.BitsPerPixel / 8;
-            byte* raw = (byte*)bitmap.BackBuffer + (topY * bitmap.BackBufferStride);
-            for (int y = topY; y < yMax; ++y)
-            {
-                for (int x = leftX; x < xMax; ++x)
-                {
-                    raw[0] = fillColor.B;
-                    raw[1] = fillColor.G;
-                    raw[2] = fillColor.R;
-                    raw[3] = 255;
-                    raw += channel;
-                }
-            }
-
-            for(int y = topY; y < yMax; ++y)
-            {
-                raw = (byte*)bitmap.BackBuffer;
-                raw += y * bitmap.BackBufferStride;
-                raw[0] = borderColor.B;
-                raw[1] = borderColor.G;
-                raw[2] = borderColor.R;
-                raw[3] = 255;
-                raw += xMax * channel;
-                raw[0] = borderColor.B;
-                raw[1] = borderColor.G;
-                raw[2] = borderColor.R;
-                raw[3] = 255;
-            }
-
-            raw = (byte*)bitmap.BackBuffer;
-            for (int x = leftX; x < xMax; ++x)
-            {
-                raw[0] = fillColor.B;
-                raw[1] = fillColor.G;
-                raw[2] = fillColor.R;
-                raw[3] = 255;
-                raw += channel;
-            }
-            raw = (byte*)bitmap.BackBuffer + (yMax * bitmap.BackBufferStride);
-            for (int x = leftX; x < xMax; ++x)
-            {
-                raw[0] = fillColor.B;
-                raw[1] = fillColor.G;
-                raw[2] = fillColor.R;
-                raw[3] = 255;
-                raw += channel;
-            }
-        }
     }
 
     public enum AgentPositioningState : byte
