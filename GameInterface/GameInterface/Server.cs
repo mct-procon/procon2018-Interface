@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MCTProcon29Protocol.Methods;
 using MCTProcon29Protocol;
 using System.Threading;
+using System.Diagnostics;
 
 namespace GameInterface
 {
@@ -15,6 +16,7 @@ namespace GameInterface
         Server server;
         GameManager gameManager;
         private int managerNum;
+        private Process AIProcess;
         public ClientRennenend(Server server_, GameManager gameManager_, int managerNum_)
         {
             this.gameManager = gameManager_;
@@ -53,8 +55,35 @@ namespace GameInterface
 
         public void OnInterrupt(Interrupt interrupt)
         {
-            gameManager.viewModel.MainWindowDispatcher.Invoke(
-                () => MessageBox.Show($"{managerNum + 1}P is disconnected."));
+            gameManager.viewModel.MainWindowDispatcher.Invoke(__onInterrupt);
+        }
+
+        private void __onInterrupt()
+        {
+            MessageBox.Show($"{managerNum + 1}P is disconnected.");
+        }
+
+        public void OnAIProcessExited(IIPCServerReader sender, EventArgs e)
+        {
+            ClientRennenend cr = (ClientRennenend)sender;
+            if(gameManager.Data.IsGameStarted)
+                gameManager.viewModel.MainWindowDispatcher.Invoke(__onAIProcessExited);
+        }
+
+        private void __onAIProcessExited()
+        {
+            if( MessageBox.Show($"{managerNum + 1}P' AI Process has exited, Do you want to Reconnect?", "Reconnection", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes )
+            {
+                
+            }
+            else
+            {
+                if (managerNum == 0)
+                    gameManager.server.IsConnected1P = false;
+                else
+                    gameManager.server.IsConnected2P = false;
+                gameManager.server.Shutdown(managerNum);
+            }
         }
     }
 
@@ -81,7 +110,7 @@ namespace GameInterface
         public Server(GameManager gameManager)
         {
             this.gameManager = gameManager;
-            data = gameManager.data;
+            data = gameManager.Data;
             App.Current.Exit += (obj, e) =>
             {
                 foreach (var man in managers)
@@ -109,11 +138,19 @@ namespace GameInterface
             }
         }
 
+
         public void SendGameInit()
         {
             SendGameInit(0);
             SendGameInit(1);
         }
+
+        private void SendConnect(int playerNum)
+        {
+            if (!isConnected[playerNum]) return;
+            using (System.Diagnostics.Process proc = System.Diagnostics.Process.GetCurrentProcess())
+                managers[playerNum].Write(DataKind.Connect, new Connect(ProgramKind.Interface) { ProcessId = proc.Id });
+        } 
 
         private void SendGameInit(int playerNum)
         {
@@ -200,6 +237,9 @@ namespace GameInterface
                 Swap<int>(ref score, ref enemyScore);
             }
         }
+
+        public void Shutdown(int playerNum) =>
+            managers[playerNum]?.Shutdown();
 
         private void Swap<T>(ref T lhs, ref T rhs)
         {

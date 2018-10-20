@@ -47,6 +47,7 @@ namespace GameInterface
         public bool IsGameStarted { get; set; } = false;
         public bool IsNextTurnStart { get; set; } = true;
         public bool IsAutoSkipTurn { get; set; }
+        public bool IsPause { get; set; }
         public int NowTurn { get; set; }
         public int BoardHeight { get; private set; }
         public int BoardWidth { get; private set; }

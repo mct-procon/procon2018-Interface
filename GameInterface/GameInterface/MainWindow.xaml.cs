@@ -30,7 +30,7 @@ namespace GameInterface
         void InitGame(GameSettings.SettingStructure settings)
         {
             gameManager.InitGameData(settings);
-            CreateCellOnCellGrid(gameManager.data.BoardWidth, gameManager.data.BoardHeight);
+            CreateCellOnCellGrid(gameManager.Data.BoardWidth, gameManager.Data.BoardHeight);
         }
 
         void CreateCellOnCellGrid(int boardWidth, int boardHeight)
@@ -61,7 +61,7 @@ namespace GameInterface
                 for (int j = 0; j < boardHeight; j++)
                 {
                     var cellUserControl = new CellUserControl();
-                    cellUserControl.DataContext = gameManager.data.CellData[i, j];
+                    cellUserControl.DataContext = gameManager.Data.CellData[i, j];
                     cellGrid.Children.Add(cellUserControl);
                     Grid.SetColumn(cellUserControl, i);
                     Grid.SetRow(cellUserControl, j);
@@ -92,7 +92,7 @@ namespace GameInterface
                     viewModel.orderButtonUserControls[i, j] = orderButtonUserControl;
                 }
             }
-            viewModel.Agents = gameManager.data.Agents;
+            viewModel.Agents = gameManager.Data.Agents;
         }
 
         int GetButtonSpaceRow(int agentNum, int buttonId)
@@ -121,7 +121,7 @@ namespace GameInterface
         private void SkipButton_Click(object sender, RoutedEventArgs e)
         {
             //まだEndTurn()していないなら、しておく
-            if (gameManager.data.IsNextTurnStart) gameManager.EndTurn();
+            if (gameManager.Data.IsNextTurnStart) gameManager.EndTurn();
             gameManager.StartTurn();
         }
 

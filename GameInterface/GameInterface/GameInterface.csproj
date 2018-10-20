@@ -102,6 +102,9 @@
     <Compile Include="GameSettings\GameSettingDialog.xaml.cs">
       <DependentUpon>GameSettingDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GameSettings\ReconnectDialog.xaml.cs">
+      <DependentUpon>ReconnectDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GameSettings\SettingStructure.cs" />
     <Compile Include="GameSettings\WaitForAIDialog.xaml.cs">
       <DependentUpon>WaitForAIDialog.xaml</DependentUpon>
@@ -133,6 +136,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GameSettings\GameSettingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GameSettings\ReconnectDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GameSettings\Styles.xaml">

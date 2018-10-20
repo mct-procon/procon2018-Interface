@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameInterface.GameSettings"
         mc:Ignorable="d"
-        Title="WaitForAIDialog" Height="450" Width="800">
+        Title="WaitForAIDialog" Height="230" MaxHeight="230" MinHeight="230" Width="800">
     <Grid Margin="10">
         <TextBlock Text="AIの接続を待っています" FontSize="32" Foreground="Gray" VerticalAlignment="Top"/>
         <Grid Margin="10,60,10,0" VerticalAlignment="Top">

@@ -13,7 +13,7 @@ namespace GameInterface
 {
     public class GameManager
     {
-        public GameData data;
+        public GameData Data;
         internal Server server;
         private DispatcherTimer dispatcherTimer;
         public MainWindowViewModel viewModel;
@@ -21,7 +21,7 @@ namespace GameInterface
         public GameManager(MainWindowViewModel _viewModel)
         {
             this.viewModel = _viewModel;
-            this.data = new GameData(_viewModel);
+            this.Data = new GameData(_viewModel);
             this.server = new Server(this);
         }
 
@@ -30,10 +30,10 @@ namespace GameInterface
             server.SendGameInit();
             InitDispatcherTimer();
             ResetOrder();
-            ScoreCalculator.Init((uint)data.BoardHeight, (uint)data.BoardWidth);
+            ScoreCalculator.Init((uint)Data.BoardHeight, (uint)Data.BoardWidth);
             StartTurn();
             GetScore();
-            data.IsGameStarted = true;
+            Data.IsGameStarted = true;
         }
 
         public void EndGame()
@@ -41,9 +41,15 @@ namespace GameInterface
             TimerStop();
         }
 
+        public void PauseGame()
+        {
+            Data.IsPause = true;
+        }
+
         public void InitGameData(GameSettings.SettingStructure settings)
         {
-            data.InitGameData(settings);
+            Data.InitGameData(settings);
+            Data.IsPause = false;
             server.StartListening(settings);
         }
 
@@ -63,8 +69,8 @@ namespace GameInterface
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
             dispatcherTimer.Start();
-            viewModel.TurnStr = $"TURN:{data.NowTurn}/{data.FinishTurn}";
-            viewModel.TimerStr = $"TIME:{data.SecondCount}/{data.TimeLimitSeconds}";
+            viewModel.TurnStr = $"TURN:{Data.NowTurn}/{Data.FinishTurn}";
+            viewModel.TimerStr = $"TIME:{Data.SecondCount}/{Data.TimeLimitSeconds}";
         }
 
         //一秒ごとに呼ばれる
@@ -76,32 +82,32 @@ namespace GameInterface
 
         private void Update()
         {
-            if (!data.IsNextTurnStart) return;
-            data.SecondCount++;
-            if (data.SecondCount == data.TimeLimitSeconds || server.IsDecidedReceived.All(b => b))
+            if (!Data.IsNextTurnStart) return;
+            Data.SecondCount++;
+            if (Data.SecondCount == Data.TimeLimitSeconds || server.IsDecidedReceived.All(b => b))
             {
-                data.IsNextTurnStart = false;
+                Data.IsNextTurnStart = false;
                 EndTurn();
             }
         }
 
         public void StartTurn()
         {
-            data.IsNextTurnStart = true;
+            Data.IsNextTurnStart = true;
             MoveAgents();
-            data.SecondCount = 0;
+            Data.SecondCount = 0;
             server.SendTurnStart();
         }
 
         public void EndTurn()
         {
-            if (!data.IsGameStarted) return;
+            if (!Data.IsGameStarted) return;
             server.SendTurnEnd();
             GetScore();
-            if (data.NowTurn < data.FinishTurn)
+            if (Data.NowTurn < Data.FinishTurn)
             {
-                data.NowTurn++;
-                if (data.IsAutoSkipTurn)
+                Data.NowTurn++;
+                if (Data.IsAutoSkipTurn)
                     StartTurn();
             }
             else
@@ -116,32 +122,32 @@ namespace GameInterface
             int onAgnetNum = IsOnAgent(point);
             if (onAgnetNum != -1)
             {
-                data.SelectPosAgent = onAgnetNum;
+                Data.SelectPosAgent = onAgnetNum;
                 return;
             }
             else
             {
                 for (int i = 0; i < Constants.AgentsNum; i++)
                 {
-                    if (data.SelectPosAgent == i)
+                    if (Data.SelectPosAgent == i)
                     {
-                        data.SelectPosAgent = -1;
-                        WarpAgent(data.Agents[i], point);
+                        Data.SelectPosAgent = -1;
+                        WarpAgent(Data.Agents[i], point);
                         return;
                     }
                 }
             }
 
-            var color = data.CellData[point.X, point.Y].AreaState_;
+            var color = Data.CellData[point.X, point.Y].AreaState_;
             var nextColor = (TeamColor)(((int)color + 1) % 3);
-            data.CellData[point.X, point.Y].AreaState_ = nextColor;
+            Data.CellData[point.X, point.Y].AreaState_ = nextColor;
         }
 
         private int IsOnAgent(Point point)
         {
             for (int i = 0; i < Constants.AgentsNum; i++)
             {
-                var agentPoint = data.Agents[i].Point;
+                var agentPoint = Data.Agents[i].Point;
                 if (agentPoint.X == point.X && agentPoint.Y == point.Y)
                 {
                     return i;
@@ -152,13 +158,13 @@ namespace GameInterface
 
         private void WarpAgent(Agent agent, Point point)
         {
-            data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
+            Data.CellData[agent.Point.X, agent.Point.Y].AgentState = TeamColor.Free;
             agent.Point = point;
             var nextPointColor =
                 agent.playerNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
-            data.CellData[point.X, point.Y].AreaState_ = nextPointColor;
-            data.CellData[point.X, point.Y].AgentState = nextPointColor;
-            viewModel.Agents = data.Agents;
+            Data.CellData[point.X, point.Y].AreaState_ = nextPointColor;
+            Data.CellData[point.X, point.Y].AgentState = nextPointColor;
+            viewModel.Agents = Data.Agents;
             return;
         }
 
@@ -167,26 +173,26 @@ namespace GameInterface
             List<int> ActionableAgentsId = GetActionableAgentsId();
 
             // Erase Agent Location's data from cells.
-            foreach (var a in data.Agents)
-                data.CellData[a.Point.X, a.Point.Y].AgentState = TeamColor.Free;
+            foreach (var a in Data.Agents)
+                Data.CellData[a.Point.X, a.Point.Y].AgentState = TeamColor.Free;
 
             for (int i = 0; i < ActionableAgentsId.Count; i++)
             {
                 int id = ActionableAgentsId[i];
-                var agent = data.Agents[id];
+                var agent = Data.Agents[id];
                 var nextP = agent.GetNextPoint();
 
-                TeamColor nextAreaState = data.CellData[nextP.X, nextP.Y].AreaState_;
+                TeamColor nextAreaState = Data.CellData[nextP.X, nextP.Y].AreaState_;
                 ActionAgentToNextP(id, agent, nextP, nextAreaState);
                 viewModel.IsRemoveMode[id] = false;
             }
-            viewModel.Agents = data.Agents;
+            viewModel.Agents = Data.Agents;
 
             // Reset Agent Location's data to cells.
-            for (int id = 0; id < data.Agents.Length; ++id)
+            for (int id = 0; id < Data.Agents.Length; ++id)
             {
-                var a = data.Agents[id].Point;
-                data.CellData[a.X, a.Y].AgentState = id / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
+                var a = Data.Agents[id].Point;
+                Data.CellData[a.X, a.Y].AgentState = id / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
             }
         }
 
@@ -204,10 +210,10 @@ namespace GameInterface
             for (i = 0; i < Constants.AgentsNum; i++)
             {
                 canMove[i] = true;
-                var agent = data.Agents[i];
+                var agent = Data.Agents[i];
                 var nextP = agent.GetNextPoint();
                 if (CheckIsPointInBoard(nextP) == false) { canMove[i] = false; continue; }
-                TeamColor nextAreaState = data.CellData[nextP.X, nextP.Y].AreaState_;
+                TeamColor nextAreaState = Data.CellData[nextP.X, nextP.Y].AreaState_;
                 if (agent.playerNum == 0 && nextAreaState == TeamColor.Area2P) { canMove[i] = false; }
                 if (agent.playerNum == 1 && nextAreaState == TeamColor.Area1P) { canMove[i] = false; }
             }
@@ -215,11 +221,11 @@ namespace GameInterface
             //次に、「指示先(agent.GetNextPoint()の位置)が被っているエージェントは移動不可」とする。
             for (i = 0; i < Constants.AgentsNum; i++)
             {
-                var agent1 = data.Agents[i];
+                var agent1 = Data.Agents[i];
                 var nextP1 = agent1.GetNextPoint();
                 for (j = i + 1; j < Constants.AgentsNum; j++)
                 {
-                    var agent2 = data.Agents[j];
+                    var agent2 = Data.Agents[j];
                     var nextP2 = agent2.GetNextPoint();
                     if (nextP1.CompareTo(nextP2) == 0)
                     {
@@ -238,13 +244,13 @@ namespace GameInterface
                 for (i = 0; i < Constants.AgentsNum; i++)
                 {
                     if (canMove[i] == false) { continue; }
-                    var agent1 = data.Agents[i];
+                    var agent1 = Data.Agents[i];
                     var nextP1 = agent1.GetNextPoint();
                     for (j = 0; j < Constants.AgentsNum; j++)
                     {
                         if (i == j) { continue; }
                         if (canMove[j] == true) { continue; }
-                        var agent2 = data.Agents[j];
+                        var agent2 = Data.Agents[j];
                         var nextP2 = agent2.Point;
                         if (nextP1.CompareTo(nextP2) == 0)
                         {
@@ -264,7 +270,7 @@ namespace GameInterface
             for (i = 0; i < Constants.AgentsNum; i++)
             {
                 canAction[i] = true;
-                var agent = data.Agents[i];
+                var agent = Data.Agents[i];
                 var nextP = agent.GetNextPoint();
                 if (CheckIsPointInBoard(nextP) == false) { canAction[i] = false; }
             }
@@ -272,11 +278,11 @@ namespace GameInterface
             //次に、「指示先(agent.GetNextPoint()の位置)が被っているエージェントは行動不可」とする。
             for (i = 0; i < Constants.AgentsNum; i++)
             {
-                var agent1 = data.Agents[i];
+                var agent1 = Data.Agents[i];
                 var nextP1 = agent1.GetNextPoint();
                 for (j = i + 1; j < Constants.AgentsNum; j++)
                 {
-                    var agent2 = data.Agents[j];
+                    var agent2 = Data.Agents[j];
                     var nextP2 = agent2.GetNextPoint();
                     if (nextP1.CompareTo(nextP2) == 0)
                     {
@@ -291,14 +297,14 @@ namespace GameInterface
             for (i = 0; i < Constants.AgentsNum; i++)
             {
                 if (canAction[i] == false) { continue; }
-                var agent1 = data.Agents[i];
+                var agent1 = Data.Agents[i];
                 var nextP1 = agent1.GetNextPoint();
 
                 for (j = 0; j < Constants.AgentsNum; j++)
                 {
                     if (i == j) { continue; }
                     if (canMove[j] == true) { continue; }
-                    var agent2 = data.Agents[j];
+                    var agent2 = Data.Agents[j];
                     var nextP2 = agent2.Point;
 
                     if (nextP1.CompareTo(nextP2) == 0)
@@ -332,8 +338,8 @@ namespace GameInterface
         private void GetScore()
         {
             for (int i = 0; i < Constants.PlayersNum; i++)
-                data.PlayerScores[i] = ScoreCalculator.CalcScore(i, data.CellData);
-            viewModel.PlayerScores = data.PlayerScores;
+                Data.PlayerScores[i] = ScoreCalculator.CalcScore(i, Data.CellData);
+            viewModel.PlayerScores = Data.PlayerScores;
         }
 
         private void ActionAgentToNextP(int i, Agent agent, Point nextP, TeamColor nextAreaState)
@@ -346,29 +352,29 @@ namespace GameInterface
                         case 0:
                             if (nextAreaState != TeamColor.Area2P)
                             {
-                                data.Agents[i].Point = nextP;
-                                data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Area1P;
+                                Data.Agents[i].Point = nextP;
+                                Data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Area1P;
                             }
                             else
                             {
-                                data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Free;
+                                Data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Free;
                             }
                             break;
                         case 1:
                             if (nextAreaState != TeamColor.Area1P)
                             {
-                                data.Agents[i].Point = nextP;
-                                data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Area2P;
+                                Data.Agents[i].Point = nextP;
+                                Data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Area2P;
                             }
                             else
                             {
-                                data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Free;
+                                Data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Free;
                             }
                             break;
                     }
                     break;
                 case Agent.State.REMOVE_TILE:
-                    data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Free;
+                    Data.CellData[nextP.X, nextP.Y].AreaState_ = TeamColor.Free;
                     break;
                 default:
                     break;
@@ -379,31 +385,31 @@ namespace GameInterface
 
         private void Draw()
         {
-            viewModel.TimerStr = $"TIME:{data.SecondCount}/{data.TimeLimitSeconds}";
-            viewModel.TurnStr = $"TURN:{data.NowTurn}/{data.FinishTurn}";
+            viewModel.TimerStr = $"TIME:{Data.SecondCount}/{Data.TimeLimitSeconds}";
+            viewModel.TurnStr = $"TURN:{Data.NowTurn}/{Data.FinishTurn}";
         }
 
         public void OrderToAgent(Order order)
         {
-            data.Agents[order.agentNum].AgentState = order.state;
-            data.Agents[order.agentNum].AgentDirection = order.direction;
-            viewModel.Agents = data.Agents;
+            Data.Agents[order.agentNum].AgentState = order.state;
+            Data.Agents[order.agentNum].AgentDirection = order.direction;
+            viewModel.Agents = Data.Agents;
         }
 
         private void ResetOrder()
         {
-            foreach (var agent in data.Agents )
+            foreach (var agent in Data.Agents )
             {
                 agent.AgentDirection = Agent.Direction.NONE;
                 agent.AgentState = Agent.State.MOVE;
             }
-            viewModel.Agents = data.Agents;
+            viewModel.Agents = Data.Agents;
         }
 
         private bool CheckIsPointInBoard(Point p)
         {
-            return (p.X >= 0 && p.X < data.BoardWidth &&
-                p.Y >= 0 && p.Y < data.BoardHeight);
+            return (p.X >= 0 && p.X < Data.BoardWidth &&
+                p.Y >= 0 && p.Y < Data.BoardHeight);
         }
     }
 }
