@@ -20,6 +20,9 @@ namespace GameInterface.GameSettings
     public partial class WaitForAIDialog : Window
     {
 
+        internal new Server DataContext { get; set; }
+        private SettingStructure SettingStruct { get; set; }
+
         public WaitForAIDialog()
         {
             InitializeComponent();
@@ -28,16 +31,23 @@ namespace GameInterface.GameSettings
         internal WaitForAIDialog(Server serverData, SettingStructure settings)
         {
             this.DataContext = serverData;
+            base.DataContext = this.DataContext;
+            SettingStruct = settings;
             InitializeComponent();
-            serverData.PropertyChanged += (ss, ee) =>
-            {
-                if (ee.PropertyName.StartsWith("IsConnected") && ((serverData.IsConnected1P | settings.IsUser1P) & (serverData.IsConnected2P | settings.IsUser2P)))
-                    Dispatcher.BeginInvoke((Action)(() => this.Close()));
-            };
+            serverData.PropertyChanged += __serverDataPropertyChanged;
             if (settings.IsUser1P)
                 Text1P.Visibility = ( Progress1P.Visibility =  Visibility.Hidden);
             if (settings.IsUser2P)
                 Text2P.Visibility = (Progress2P.Visibility = Visibility.Hidden);
+        }
+
+        private void __serverDataPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.StartsWith("IsConnected") && ((DataContext.IsConnected1P | SettingStruct.IsUser1P) & (DataContext.IsConnected2P | SettingStruct.IsUser2P)))
+            {
+                DataContext.PropertyChanged -= __serverDataPropertyChanged;
+                Dispatcher.BeginInvoke((Action)(() => this.Close()));
+            }
         }
     }
 }
