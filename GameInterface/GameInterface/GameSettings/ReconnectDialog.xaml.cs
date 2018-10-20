@@ -19,9 +19,33 @@ namespace GameInterface.GameSettings
     /// </summary>
     public partial class ReconnectDialog : Window
     {
+        internal new Server DataContext { get; set; }
+        private int  PlayerNum { get; set; }
+
         public ReconnectDialog()
         {
             InitializeComponent();
+        }
+
+        internal ReconnectDialog(Server serverData, int playerNum)
+        {
+            this.DataContext = serverData;
+            base.DataContext = this.DataContext;
+            PlayerNum = playerNum;
+            PlayerText.Text = (playerNum + 1).ToString() + "P";
+            InitializeComponent();
+            serverData.PropertyChanged += __serverDataPropertyChanged;
+        }
+
+        private void __serverDataPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!e.PropertyName.StartsWith("IsConnected"))
+                return;
+            if (PlayerNum == 0 ? DataContext.IsConnected1P : DataContext.IsConnected2P)
+            {
+                DataContext.PropertyChanged -= __serverDataPropertyChanged;
+                Dispatcher.BeginInvoke((Action)(() => this.Close()));
+            }
         }
     }
 }

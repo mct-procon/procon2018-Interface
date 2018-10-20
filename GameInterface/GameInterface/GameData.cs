@@ -52,6 +52,10 @@ namespace GameInterface
         public int BoardHeight { get; private set; }
         public int BoardWidth { get; private set; }
         public int SelectPosAgent { get; set; }
+
+        public GameSettings.SettingStructure CurrentGameSettings { get; set; }
+
+
         public GameData(MainWindowViewModel _viewModel)
         {
             viewModel = _viewModel;
@@ -59,6 +63,7 @@ namespace GameInterface
 
         public void InitGameData(GameSettings.SettingStructure settings)
         {
+            CurrentGameSettings = settings;
             SecondCount = 0;
             NowTurn = 1;
             FinishTurn = settings.Turns;

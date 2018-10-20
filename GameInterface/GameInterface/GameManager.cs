@@ -14,7 +14,7 @@ namespace GameInterface
     public class GameManager
     {
         public GameData Data;
-        internal Server server;
+        internal Server Server;
         private DispatcherTimer dispatcherTimer;
         public MainWindowViewModel viewModel;
 
@@ -22,12 +22,12 @@ namespace GameInterface
         {
             this.viewModel = _viewModel;
             this.Data = new GameData(_viewModel);
-            this.server = new Server(this);
+            this.Server = new Server(this);
         }
 
         public void StartGame()
         {
-            server.SendGameInit();
+            Server.SendGameInit();
             InitDispatcherTimer();
             ResetOrder();
             ScoreCalculator.Init((uint)Data.BoardHeight, (uint)Data.BoardWidth);
@@ -46,11 +46,16 @@ namespace GameInterface
             Data.IsPause = true;
         }
 
+        public void RerunGame()
+        {
+            Data.IsPause = false;
+        }
+
         public void InitGameData(GameSettings.SettingStructure settings)
         {
             Data.InitGameData(settings);
             Data.IsPause = false;
-            server.StartListening(settings);
+            Server.StartListening(settings);
         }
 
         public void TimerStop()
@@ -84,7 +89,7 @@ namespace GameInterface
         {
             if (!Data.IsNextTurnStart) return;
             Data.SecondCount++;
-            if (Data.SecondCount == Data.TimeLimitSeconds || server.IsDecidedReceived.All(b => b))
+            if (Data.SecondCount == Data.TimeLimitSeconds || Server.IsDecidedReceived.All(b => b))
             {
                 Data.IsNextTurnStart = false;
                 EndTurn();
@@ -96,13 +101,13 @@ namespace GameInterface
             Data.IsNextTurnStart = true;
             MoveAgents();
             Data.SecondCount = 0;
-            server.SendTurnStart();
+            Server.SendTurnStart();
         }
 
         public void EndTurn()
         {
             if (!Data.IsGameStarted) return;
-            server.SendTurnEnd();
+            Server.SendTurnEnd();
             GetScore();
             if (Data.NowTurn < Data.FinishTurn)
             {
@@ -112,7 +117,7 @@ namespace GameInterface
             }
             else
             {
-                server.SendGameEnd(true);
+                Server.SendGameEnd(true);
             }
         }
 

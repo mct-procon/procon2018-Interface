@@ -17,7 +17,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="{Binding PlayerText}" FontSize="24" Margin="10"/>
+            <TextBlock Name="PlayerText" Text="1P" FontSize="24" Margin="10" VerticalAlignment="Center"/>
 
             <ProgressBar x:Name="Progress" Value="100" IsIndeterminate="true" Margin="10" Grid.Column="1"/>
         </Grid>

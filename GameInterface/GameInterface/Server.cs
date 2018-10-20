@@ -16,7 +16,6 @@ namespace GameInterface
         Server server;
         GameManager gameManager;
         private int managerNum;
-        private Process AIProcess;
         public ClientRennenend(Server server_, GameManager gameManager_, int managerNum_)
         {
             this.gameManager = gameManager_;
@@ -66,24 +65,32 @@ namespace GameInterface
         public void OnAIProcessExited(IIPCServerReader sender, EventArgs e)
         {
             ClientRennenend cr = (ClientRennenend)sender;
-            if(gameManager.Data.IsGameStarted)
-                gameManager.viewModel.MainWindowDispatcher.Invoke(__onAIProcessExited);
+            if (gameManager.Data.IsGameStarted)
+                gameManager.viewModel.MainWindowDispatcher.BeginInvoke((Action)__onAIProcessExited);
         }
 
         private void __onAIProcessExited()
         {
-            if( MessageBox.Show($"{managerNum + 1}P' AI Process has exited, Do you want to Reconnect?", "Reconnection", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes )
+            gameManager.PauseGame();
+            if (managerNum == 0)
+                gameManager.Server.IsConnected1P = false;
+            else
+                gameManager.Server.IsConnected2P = false;
+            if ( MessageBox.Show($"{managerNum + 1}P' AI Process has exited, Do you want to Reconnect?", "Reconnection", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes )
             {
-                
+
+                GameSettings.ReconnectDialog dig = new GameSettings.ReconnectDialog(gameManager.Server, managerNum);
+                Task.Run(() => server.Reconnect(managerNum, gameManager.Data.CurrentGameSettings));
+                dig.ShowDialog();
+                server.SendConnect(managerNum);
+                server.SendGameInit(managerNum);
+                server.SendTurnStart(managerNum);
             }
             else
             {
-                if (managerNum == 0)
-                    gameManager.server.IsConnected1P = false;
-                else
-                    gameManager.server.IsConnected2P = false;
-                gameManager.server.Shutdown(managerNum);
+                gameManager.Server.Shutdown(managerNum);
             }
+            gameManager.RerunGame();
         }
     }
 
@@ -138,6 +145,17 @@ namespace GameInterface
             }
         }
 
+        private void startListening(int playerNum, int portId)
+        {
+            managers[playerNum] = new IPCManager(new ClientRennenend(this, gameManager, 1));
+            Task.Run(() => managers[1].Start(portId));
+        }
+
+        public void Reconnect(int playerNum, GameSettings.SettingStructure settings)
+        {
+            managers[playerNum].Shutdown();
+            startListening(playerNum, playerNum == 0 ? settings.Port1P : settings.Port2P);
+        }
 
         public void SendGameInit()
         {
@@ -145,14 +163,14 @@ namespace GameInterface
             SendGameInit(1);
         }
 
-        private void SendConnect(int playerNum)
+        public void SendConnect(int playerNum)
         {
             if (!isConnected[playerNum]) return;
             using (System.Diagnostics.Process proc = System.Diagnostics.Process.GetCurrentProcess())
                 managers[playerNum].Write(DataKind.Connect, new Connect(ProgramKind.Interface) { ProcessId = proc.Id });
         } 
 
-        private void SendGameInit(int playerNum)
+        public void SendGameInit(int playerNum)
         {
             if (!isConnected[playerNum]) return;
             sbyte[,] board = new sbyte[data.BoardWidth, data.BoardHeight];
@@ -168,7 +186,7 @@ namespace GameInterface
                 new MCTProcon29Protocol.Point((uint)data.Agents[1 + playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
                 new MCTProcon29Protocol.Point((uint)data.Agents[2 - playerNum * 2].Point.X, (uint)data.Agents[2 - playerNum * 2].Point.Y),
                 new MCTProcon29Protocol.Point((uint)data.Agents[3 - playerNum * 2].Point.X, (uint)data.Agents[3 - playerNum * 2].Point.Y),
-                data.FinishTurn));
+                (byte)(data.FinishTurn - data.NowTurn)));
         }
 
         public void SendTurnStart()
@@ -177,7 +195,7 @@ namespace GameInterface
             SendTurnStart(1);
         }
 
-        private void SendTurnStart(int playerNum)
+        public void SendTurnStart(int playerNum)
         {
             IsDecidedReceived[playerNum] = false;
             if (!isConnected[playerNum]) return;

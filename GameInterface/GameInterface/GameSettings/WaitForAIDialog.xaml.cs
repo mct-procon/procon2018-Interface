@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace GameInterface.GameSettings
 {
@@ -43,7 +44,23 @@ namespace GameInterface.GameSettings
 
         private void __serverDataPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.StartsWith("IsConnected") && ((DataContext.IsConnected1P | SettingStruct.IsUser1P) & (DataContext.IsConnected2P | SettingStruct.IsUser2P)))
+            if (!e.PropertyName.StartsWith("IsConnected"))
+                return;
+            if(Progress1P.IsIndeterminate == true && DataContext.IsConnected1P)
+            {
+                Progress1P.IsIndeterminate = false;
+                Progress1P.Value = 0;
+                DoubleAnimation anime = new DoubleAnimation(0, 100, TimeSpan.FromSeconds(1));
+                Progress1P.BeginAnimation(ProgressBar.ValueProperty, anime);
+            }
+            if (Progress2P.IsIndeterminate == true && DataContext.IsConnected2P)
+            {
+                Progress2P.IsIndeterminate = false;
+                Progress2P.Value = 0;
+                DoubleAnimation anime = new DoubleAnimation(0, 100, TimeSpan.FromSeconds(1));
+                Progress2P.BeginAnimation(ProgressBar.ValueProperty, anime);
+            }
+            if (((DataContext.IsConnected1P | SettingStruct.IsUser1P) & (DataContext.IsConnected2P | SettingStruct.IsUser2P)))
             {
                 DataContext.PropertyChanged -= __serverDataPropertyChanged;
                 Dispatcher.BeginInvoke((Action)(() => this.Close()));
