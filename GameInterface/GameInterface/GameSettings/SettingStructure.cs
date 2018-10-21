@@ -49,12 +49,12 @@ namespace GameInterface.GameSettings
         /// <summary>
         /// Whether 1P is a user.
         /// </summary>
-        internal bool IsUser1P => port1P == 0;
+        public bool IsUser1P => port1P == 0;
 
         /// <summary>
         /// Whether 2P is a user.
         /// </summary>
-        internal bool IsUser2P => port2P == 0;
+        public bool IsUser2P => port2P == 0;
 
         private byte boardCreationState = 0;
 

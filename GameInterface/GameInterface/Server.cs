@@ -118,17 +118,18 @@ namespace GameInterface
         {
             this.gameManager = gameManager;
             data = gameManager.Data;
-            App.Current.Exit += (obj, e) =>
-            {
-                foreach (var man in managers)
+            if(App.Current != null)
+                App.Current.Exit += (obj, e) =>
                 {
-                    try
+                    foreach (var man in managers)
                     {
-                        man?.Shutdown();
+                        try
+                        {
+                            man?.Shutdown();
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
-            };
+                };
         }
 
         public void StartListening(GameSettings.SettingStructure settings)
