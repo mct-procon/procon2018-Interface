@@ -122,7 +122,9 @@ namespace GameInterface
                 Server.SendGameEnd();
                 if (Data.CurrentGameSettings.IsAutoGoNextGame)
                 {
+                    Data.CurrentGameSettings.IsUseSameAI = true;
                     var settings = Data.CurrentGameSettings;
+                    mainWindow.ShotAndSave();
                     mainWindow.InitGame(settings);
                     StartGame();
                 }

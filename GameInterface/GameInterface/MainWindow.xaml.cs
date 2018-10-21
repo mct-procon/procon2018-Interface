@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using GameInterface.Cells;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace GameInterface
 {
@@ -144,6 +146,32 @@ namespace GameInterface
                 if (!(result.IsUser1P & result.IsUser2P))
                     (new GameSettings.WaitForAIDialog(viewModel.gameManager.Server, result)).ShowDialog();
                 gameManager.StartGame();
+            }
+        }
+
+        public void ShotAndSave()
+        {
+            double actualHeight = ((UIElement)Content).RenderSize.Height;
+            double actualWidth = ((UIElement)Content).RenderSize.Width;
+
+
+            RenderTargetBitmap renderTarget = new RenderTargetBitmap((int)actualWidth, (int)actualHeight, 96, 96, PixelFormats.Pbgra32);
+            VisualBrush sourceBrush = new VisualBrush((UIElement)Content);
+
+            DrawingVisual drawingVisual = new DrawingVisual();
+            DrawingContext drawingContext = drawingVisual.RenderOpen();
+
+            using (drawingContext)
+            {
+                drawingContext.DrawRectangle(sourceBrush, null, new Rect(new System.Windows.Point(0, 0), new System.Windows.Point(actualWidth, actualHeight)));
+            }
+            renderTarget.Render(drawingVisual);
+
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(renderTarget));
+            using (System.IO.FileStream stream = new System.IO.FileStream(System.IO.Path.Combine("Saves", $"{ DateTime.Now.ToString("MM日H時m分")}.jpg"), System.IO.FileMode.Create, System.IO.FileAccess.Write))
+            {
+                encoder.Save(stream);
             }
         }
     }
