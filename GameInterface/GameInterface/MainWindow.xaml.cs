@@ -22,12 +22,12 @@ namespace GameInterface
             this.viewModel = new MainWindowViewModel();
             this.viewModel.MainWindowDispatcher = Dispatcher;
             this.DataContext = this.viewModel;
-            this.gameManager = new GameManager(viewModel);
+            this.gameManager = new GameManager(viewModel,this);
             this.viewModel.gameManager = this.gameManager;
             CreateOrderButtonsOnPlayerGrid();
         }
 
-        void InitGame(GameSettings.SettingStructure settings)
+        public void InitGame(GameSettings.SettingStructure settings)
         {
             gameManager.InitGameData(settings);
             CreateCellOnCellGrid(gameManager.Data.BoardWidth, gameManager.Data.BoardHeight);

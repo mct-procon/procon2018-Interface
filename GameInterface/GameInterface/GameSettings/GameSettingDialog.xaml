@@ -39,6 +39,7 @@
         <TextBlock Text="ターン時間" Grid.Row="1" Grid.Column="3" Margin="0,4,4,4" HorizontalAlignment="Right"/>
         <TextBox Grid.Row="1" Grid.Column="4" Margin="2" Text="{Binding LimitTime}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
         <CheckBox Content="自動ターンエンド" Grid.Row="2" Grid.Column="1" IsChecked="{Binding IsAutoSkip}"/>
+        <CheckBox Content="自動で次のゲームへ" Grid.Row="2" Grid.Column="4" IsChecked="{Binding IsAutoGoNextGame}"/>
 
         <TextBlock Text="フィールド設定" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" FontSize="24"/>
         <TabControl Grid.Row="5" Grid.ColumnSpan="5" Margin="5" SelectedIndex="{Binding _BoardCreationState}">

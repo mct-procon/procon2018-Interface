@@ -148,6 +148,17 @@ namespace GameInterface.GameSettings
             set => isAutoSkip = value;
         }
 
+        private bool isAutoGoNextGame = false;
+
+        /// <summary>
+        /// Whether go next game automatic when a game end.
+        /// </summary>
+        public bool IsAutoGoNextGame
+        {
+            get => isAutoGoNextGame;
+            set => isAutoGoNextGame = value;
+        }
+
         private bool isUseSameAI = false;
 
         /// <summary>

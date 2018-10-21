@@ -17,10 +17,11 @@ namespace GameInterface
         internal Server Server;
         private DispatcherTimer dispatcherTimer;
         public MainWindowViewModel viewModel;
-
-        public GameManager(MainWindowViewModel _viewModel)
+        private MainWindow mainWindow;
+        public GameManager(MainWindowViewModel _viewModel,MainWindow _mainWindow)
         {
             this.viewModel = _viewModel;
+            this.mainWindow = _mainWindow;
             this.Data = new GameData(_viewModel);
             this.Server = new Server(this);
         }
@@ -117,7 +118,14 @@ namespace GameInterface
             }
             else
             {
+                EndGame();
                 Server.SendGameEnd();
+                if (Data.CurrentGameSettings.IsAutoGoNextGame)
+                {
+                    var settings = Data.CurrentGameSettings;
+                    mainWindow.InitGame(settings);
+                    StartGame();
+                }
             }
         }
 
@@ -406,7 +414,7 @@ namespace GameInterface
 
         private void ResetOrder()
         {
-            foreach (var agent in Data.Agents )
+            foreach (var agent in Data.Agents)
             {
                 agent.AgentDirection = Agent.Direction.NONE;
                 agent.AgentState = Agent.State.MOVE;
