@@ -43,6 +43,12 @@ namespace GameInterface
             gameManager.viewModel.MainWindowDispatcher.Invoke(decidedMethod);
         }
 
+        public void OnDecidedEx(DecidedEx decided)
+        {
+            _decided = decided[0];
+            gameManager.viewModel.MainWindowDispatcher.Invoke(decidedMethod);
+        }
+
         private void decidedMethod()
         {
             var decided = _decided;
@@ -84,7 +90,7 @@ namespace GameInterface
                 dig.ShowDialog();
                 server.SendConnect(managerNum);
                 server.SendGameInit(managerNum);
-                server.SendTurnStart(managerNum);
+                server.SendTurnStart(managerNum, true, true);
             }
             else
             {
@@ -144,7 +150,11 @@ namespace GameInterface
                 else
                 {
                     managers[0] = new IPCManager(new ClientRennenend(this, gameManager, 0));
-                    Task.Run(() => managers[0].Start(settings.Port1P));
+                    Task.Run(async () =>
+                    {
+                        await managers[0].Connect(settings.Port1P);
+                        await managers[0].StartAsync();
+                    });
                 }
             }
             if (!settings.IsUser2P)
@@ -156,15 +166,23 @@ namespace GameInterface
                 else
                 {
                     managers[1] = new IPCManager(new ClientRennenend(this, gameManager, 1));
-                    Task.Run(() => managers[1].Start(settings.Port2P));
+                    Task.Run(async () => 
+                    {
+                        await managers[1].Connect(settings.Port2P);
+                        await managers[1].StartAsync();
+                    });
                 }
             }
         }
 
         private void startListening(int playerNum, int portId)
         {
-            managers[playerNum] = new IPCManager(new ClientRennenend(this, gameManager, 1));
-            Task.Run(() => managers[1].Start(portId));
+            managers[playerNum] = new IPCManager(new ClientRennenend(this, gameManager, playerNum));
+            Task.Run(async () =>
+            {
+                await managers[playerNum].Connect(portId);
+                await managers[playerNum].StartAsync();
+            });
         }
 
         public void Reconnect(int playerNum, GameSettings.SettingStructure settings)
@@ -205,13 +223,13 @@ namespace GameInterface
                 (byte)(data.FinishTurn - data.NowTurn)));
         }
 
-        public void SendTurnStart()
+        public void SendTurnStart(bool[] movable)
         {
-            SendTurnStart(0);
-            SendTurnStart(1);
+            SendTurnStart(0, movable[0], movable[1]);
+            SendTurnStart(1, movable[2], movable[3]);
         }
 
-        public void SendTurnStart(int playerNum)
+        public void SendTurnStart(int playerNum, bool isAgent1Moved, bool isAgent2Moved)
         {
             IsDecidedReceived[playerNum] = false;
             if (!isConnected[playerNum]) return;
@@ -236,7 +254,9 @@ namespace GameInterface
                 new MCTProcon29Protocol.Point((uint)data.Agents[2 - playerNum * 2].Point.X, (uint)data.Agents[2 - playerNum * 2].Point.Y),
                 new MCTProcon29Protocol.Point((uint)data.Agents[3 - playerNum * 2].Point.X, (uint)data.Agents[3 - playerNum * 2].Point.Y),
                 colorBoardMe,
-                colorBoardEnemy));
+                colorBoardEnemy,
+                isAgent1Moved,
+                isAgent2Moved));
         }
 
         public void SendTurnEnd()

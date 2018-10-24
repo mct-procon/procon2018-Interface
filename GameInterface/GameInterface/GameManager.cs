@@ -100,10 +100,10 @@ namespace GameInterface
         public void StartTurn()
         {
             Data.IsNextTurnStart = true;
-            MoveAgents();
+            var movable = MoveAgents();
             GetScore();
             Data.SecondCount = 0;
-            Server.SendTurnStart();
+            Server.SendTurnStart(movable);
         }
 
         public void EndTurn()
@@ -183,7 +183,7 @@ namespace GameInterface
             return;
         }
 
-        private void MoveAgents()
+        private bool[] MoveAgents()
         {
             List<int> ActionableAgentsId = GetActionableAgentsId();
 
@@ -209,6 +209,13 @@ namespace GameInterface
                 var a = Data.Agents[id].Point;
                 Data.CellData[a.X, a.Y].AgentState = id / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
             }
+
+            bool[] movableResult = new bool[4];
+            for (int i = 0; i < movableResult.Length; ++i)
+                movableResult[i] = false;
+            foreach (var a in ActionableAgentsId)
+                movableResult[a] = true;
+            return movableResult;
         }
 
         //naotti: 行動可能なエージェントのId(1p{0,1}, 2p{2,3})を返す。
