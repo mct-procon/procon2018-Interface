@@ -6,6 +6,6 @@
              xmlns:local="clr-namespace:GameInterface"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Button x:Name="orderButton" FontWeight="Bold" FontSize="32">
+    <Button x:Name="orderButton" FontWeight="Bold" FontFamily="Meiryo UI" FontSize="32">
     </Button>
 </UserControl>

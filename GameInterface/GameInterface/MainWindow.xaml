@@ -80,25 +80,29 @@
                     <Setter Property="Margin" Value="1"/>
                 </Style>
             </Grid.Resources>
-            <TextBlock
-                Text="1" FontSize="15" Background="White" Foreground="Blue" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Grid.Column="{Binding Agents[0].Point.X}" Margin="3,3,0,0"
-                Grid.Row="{Binding Agents[0].Point.Y}"  Grid.ZIndex="1" />
+            <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="1"
+                Grid.Column="{Binding Agents[0].Point.X}" Margin="1,1,0,0"
+                Grid.Row="{Binding Agents[0].Point.Y}"  Grid.ZIndex="1" Background="White" Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}" >
+                <TextBlock Text="1" FontSize="15" FontWeight="Bold" Foreground="Blue" TextAlignment="Center"/>
+            </Border>
 
-            <TextBlock
-                Text="2" FontSize="15" Background="White" Foreground="Blue" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Grid.Column="{Binding Agents[1].Point.X}" Margin="3,3,0,0"
-                Grid.Row="{Binding Agents[1].Point.Y}"  Grid.ZIndex="1" />
+            <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="1"
+                Grid.Column="{Binding Agents[1].Point.X}" Margin="1,1,0,0"
+                Grid.Row="{Binding Agents[1].Point.Y}"  Grid.ZIndex="1" Background="White" Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">
+                <TextBlock Text="2" FontSize="15" FontWeight="Bold" Foreground="Blue" TextAlignment="Center" />
+            </Border>
 
-            <TextBlock
-                Text="1" FontSize="15" Background="White" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Grid.Column="{Binding Agents[2].Point.X}" Margin="3,3,0,0"
-                Grid.Row="{Binding Agents[2].Point.Y}"  Grid.ZIndex="1" />
+            <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="1"
+                Grid.Column="{Binding Agents[2].Point.X}" Margin="1,1,0,0"
+                Grid.Row="{Binding Agents[2].Point.Y}"  Grid.ZIndex="1" Background="White" Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">
+                <TextBlock Text="1" FontSize="15" FontWeight="Bold" Foreground="Red" TextAlignment="Center" />
+            </Border>
 
-            <TextBlock
-                Text="2" FontSize="15" Background="White" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Grid.Column="{Binding Agents[3].Point.X}" Margin="3,3,0,0"
-                Grid.Row="{Binding Agents[3].Point.Y}"  Grid.ZIndex="1" />
+            <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="1"
+                Grid.Column="{Binding Agents[3].Point.X}" Margin="1,1,0,0"
+                Grid.Row="{Binding Agents[3].Point.Y}"  Grid.ZIndex="1" Background="White" Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">
+                <TextBlock Text="2" FontSize="15" FontWeight="Bold" Foreground="Red" TextAlignment="Center"/>
+            </Border>
         </Grid>
 
         <Grid x:Name="player2Grid" Grid.Row="1" Grid.Column="3" Background="Crimson">

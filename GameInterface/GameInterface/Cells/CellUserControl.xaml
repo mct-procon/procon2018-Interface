@@ -43,7 +43,9 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Border BorderThickness="5">
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Score}" FontSize="20"/>
+    <Border BorderThickness="8">
+        <Viewbox>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Score}" FontSize="18"/>
+        </Viewbox>
     </Border>
 </UserControl>
