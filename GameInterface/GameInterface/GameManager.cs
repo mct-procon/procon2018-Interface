@@ -110,7 +110,7 @@ namespace GameInterface
         {
             if (!Data.IsGameStarted) return;
             Server.SendTurnEnd();
-            if (Data.NowTurn < Data.FinishTurn)
+            if (Data.NowTurn <= Data.FinishTurn)
             {
                 Data.NowTurn++;
                 if (Data.IsAutoSkipTurn)

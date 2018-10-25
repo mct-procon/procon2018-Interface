@@ -220,7 +220,7 @@ namespace GameInterface
                 new MCTProcon29Protocol.Point((uint)data.Agents[1 + playerNum * 2].Point.X, (uint)data.Agents[1 + playerNum * 2].Point.Y),
                 new MCTProcon29Protocol.Point((uint)data.Agents[2 - playerNum * 2].Point.X, (uint)data.Agents[2 - playerNum * 2].Point.Y),
                 new MCTProcon29Protocol.Point((uint)data.Agents[3 - playerNum * 2].Point.X, (uint)data.Agents[3 - playerNum * 2].Point.Y),
-                (byte)(data.FinishTurn - data.NowTurn)));
+                (byte)(data.FinishTurn - data.NowTurn + 1)));
         }
 
         public void SendTurnStart(bool[] movable)
