@@ -25,7 +25,7 @@ namespace GameInterface
         public static MainWindowViewModel Viewmodel { get; set; }
         readonly string[] buttonText = new string[] {
             "8", "1", "2",
-            "7", "J", "3",
+            "7", "・", "3",
             "6", "5", "4",
         };
 
