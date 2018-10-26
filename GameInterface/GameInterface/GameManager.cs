@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using MCTProcon29Protocol.Methods;
 
 namespace GameInterface
 {
@@ -406,6 +407,33 @@ namespace GameInterface
             }
             agent.AgentDirection = Agent.Direction.NONE;
             agent.AgentState = Agent.State.MOVE;
+        }
+
+        public void ClearDecisions(int index)
+        {
+            Data.Decisions[index]?.Clear();
+            viewModel.RaiseDecisionsChanged();
+        }
+
+        public void SetDecisions(int index, DecidedEx decideds)
+        {
+            if (Data.Decisions[index] == null)
+                Data.Decisions[index] = new List<Decided>(decideds.Count);
+            Data.Decisions[index].Capacity = decideds.Count;
+            Data.Decisions[index].Clear();
+            for (int i = 0; i < decideds.Count; ++i)
+                Data.Decisions[index].Add(decideds[i]);
+            viewModel.RaiseDecisionsChanged();
+            if (index == 0)
+                viewModel.Decisions1PSelectedIndex = 0;
+            else
+                viewModel.Decisions2PSelectedIndex = 0;
+
+            var decided = decideds[0];
+            Agent.Direction dir = Agent.CastPointToDir(new Point(decided.MeAgent1.X, decided.MeAgent1.Y));
+            OrderToAgent(new Order(index * 2, dir, Agent.State.MOVE));
+            dir = Agent.CastPointToDir(new Point(decided.MeAgent2.X, decided.MeAgent2.Y));
+            OrderToAgent(new Order(index * 2 + 1, dir, Agent.State.MOVE));
         }
 
         private void Draw()

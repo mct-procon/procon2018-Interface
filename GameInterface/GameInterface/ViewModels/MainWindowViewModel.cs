@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows;
 using GameInterface.Cells;
 using System.Windows.Threading;
+using MCTProcon29Protocol.Methods;
 
 namespace GameInterface
 {
@@ -67,6 +68,39 @@ namespace GameInterface
             get => turnStr;
             set => RaisePropertyChanged(ref turnStr, value);
         }
+
+        public void RaiseDecisionsChanged()
+        {
+            RaisePropertyChanged("Decisions1P");
+            RaisePropertyChanged("Decisions2P");
+        }
+        public List<Decided> Decisions1P {
+            get => gameManager.Data.Decisions[0];
+            set {
+                gameManager.Data.Decisions[0] = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private int decisions1PSelectedIndex = -1;
+        public int Decisions1PSelectedIndex {
+            get => decisions1PSelectedIndex;
+            set => RaisePropertyChanged(ref decisions1PSelectedIndex, value);
+        }
+
+        public List<Decided> Decisions2P {
+            get => gameManager.Data.Decisions[1];
+            set {
+                gameManager.Data.Decisions[1] = value;
+                RaisePropertyChanged();
+            }
+        }
+        private int decisions2PSelectedIndex = -1;
+        public int Decisions2PSelectedIndex {
+            get => decisions2PSelectedIndex;
+            set => RaisePropertyChanged(ref decisions2PSelectedIndex, value);
+        }
+
         //---------------------------------------
         //ボタン等を押された時の関数
         public DelegateCommand<Order> OrderToAgentCommand { get; private set; }

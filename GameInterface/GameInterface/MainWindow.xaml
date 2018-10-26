@@ -33,7 +33,7 @@
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
-        <Button x:Name="SkipButton" Grid.Column="3" HorizontalAlignment="Left"  Content="SKIP" Click="SkipButton_Click">
+        <Button x:Name="SkipButton" Grid.Column="3" HorizontalAlignment="Left"  Content="SKIP" Click="SkipButton_Click" Width="80">
              
         </Button>
 
@@ -55,7 +55,8 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="0.8*"/>
+                <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
                 <StackPanel.Resources>
@@ -72,6 +73,24 @@
             <ToggleButton Content="タイル除去モード" Height="30" IsChecked="{Binding IsRemoveMode[0]}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>
             <TextBlock Text="1p.エージェント2" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Foreground="White"/>
             <ToggleButton Content="タイル除去モード" Height="30" IsChecked="{Binding IsRemoveMode[1]}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>
+
+            <ListBox x:Name="Decisions1P" Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding Decisions1P}" SelectionChanged="Decisions1P_SelectionChanged" SelectedIndex="{Binding Decisions1PSelectedIndex}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Score}"/>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <TextBlock Foreground="Green" Text="{Binding MeAgent1}"/>
+                                <TextBlock Foreground="Violet" Text="{Binding MeAgent2}"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
 
         <Grid x:Name="cellGrid" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1">
@@ -123,7 +142,8 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="0.8*"/>
+                <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
                 <StackPanel.Resources>
@@ -140,6 +160,25 @@
             <ToggleButton Content="タイル除去モード" Height="30" IsChecked="{Binding IsRemoveMode[2]}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>
             <TextBlock Text="2p.エージェント2" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Foreground="White"/>
             <ToggleButton Content="タイル除去モード" Height="30" IsChecked="{Binding IsRemoveMode[3]}" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>
+
+
+            <ListBox x:Name="Decisions2P" Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{Binding Decisions2P}" SelectionChanged="Decisions2P_SelectionChanged" SelectedIndex="{Binding Decisions2PSelectedIndex}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Score}"/>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <TextBlock Foreground="Green" Text="{Binding MeAgent1}"/>
+                                <TextBlock Foreground="Violet" Text="{Binding MeAgent2}"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
 
     </Grid>

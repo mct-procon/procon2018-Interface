@@ -1,4 +1,5 @@
 ﻿using GameInterface.Cells;
+using MCTProcon29Protocol.Methods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,8 @@ namespace GameInterface
 
         public GameSettings.SettingStructure CurrentGameSettings { get; set; }
 
-
+        public List<Decided>[] Decisions = new List<Decided>[2];
+        
         public GameData(MainWindowViewModel _viewModel)
         {
             viewModel = _viewModel;

@@ -39,14 +39,19 @@ namespace GameInterface
 
         public void OnDecided(Decided decided)
         {
+            gameManager.ClearDecisions(managerNum);
             _decided = decided;
             gameManager.viewModel.MainWindowDispatcher.Invoke(decidedMethod);
         }
 
         public void OnDecidedEx(DecidedEx decided)
         {
-            _decided = decided[0];
-            gameManager.viewModel.MainWindowDispatcher.Invoke(decidedMethod);
+            gameManager.viewModel.MainWindowDispatcher.Invoke(() =>
+            {
+                gameManager.SetDecisions(managerNum, decided);
+            });
+            // _decided = decided[0];
+            //gameManager.viewModel.MainWindowDispatcher.Invoke(decidedMethod);
         }
 
         private void decidedMethod()
@@ -119,6 +124,7 @@ namespace GameInterface
         }
 
         public bool[] IsDecidedReceived = new bool[] { false, false };
+
 
         public Server(GameManager gameManager)
         {
