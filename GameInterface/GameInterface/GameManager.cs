@@ -417,18 +417,16 @@ namespace GameInterface
 
         public void SetDecisions(int index, DecidedEx decideds)
         {
-            if (Data.Decisions[index] == null)
-                Data.Decisions[index] = new List<Decided>(decideds.Count);
-            Data.Decisions[index].Capacity = decideds.Count;
-            Data.Decisions[index].Clear();
-            for (int i = 0; i < decideds.Count; ++i)
-                Data.Decisions[index].Add(decideds[i]);
-            viewModel.RaiseDecisionsChanged();
             if (index == 0)
+            {
+                viewModel.Decisions1P = decideds.Data;
                 viewModel.Decisions1PSelectedIndex = 0;
+            }
             else
+            {
+                viewModel.Decisions2P = decideds.Data;
                 viewModel.Decisions2PSelectedIndex = 0;
-
+            }
             var decided = decideds[0];
             Agent.Direction dir = Agent.CastPointToDir(new Point(decided.MeAgent1.X, decided.MeAgent1.Y));
             OrderToAgent(new Order(index * 2, dir, Agent.State.MOVE));
