@@ -32,6 +32,14 @@ namespace GameInterface
                 RaisePropertyChanged("TimerStr");
             }
         }
+        public int TimeLimitSeconds {
+            get => gameManager.Data.TimeLimitSeconds;
+            set {
+                gameManager.Data.TimeLimitSeconds = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private Agent[] agents = new Agent[]{
             new Agent(),new Agent(),new Agent(),new Agent()
         };

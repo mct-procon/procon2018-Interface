@@ -33,6 +33,7 @@
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
+        <TextBox Text="{Binding TimeLimitSeconds}" Grid.Column="3" Margin="85,0,47,0"/>
         <Button x:Name="SkipButton" Grid.Column="3" HorizontalAlignment="Left"  Content="SKIP" Click="SkipButton_Click" Width="80">
              
         </Button>
