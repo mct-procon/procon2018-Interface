@@ -121,6 +121,9 @@
       <DependentUpon>QRCodeReaderDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="QRCodeReader\QRCodeTextParser.cs" />
+    <Compile Include="QRCodeReader\RotationDialog.xaml.cs">
+      <DependentUpon>RotationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ScoreCalculator.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="TeamColor.cs" />
@@ -178,6 +181,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="QRCodeReader\QRCodeReaderDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="QRCodeReader\RotationDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles.xaml">

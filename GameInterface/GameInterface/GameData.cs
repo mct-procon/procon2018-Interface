@@ -19,26 +19,21 @@ namespace GameInterface
         //---------------------------------------
         //ViewModelと連動させるデータ(画面上に現れるデータ)
         private Cell[,] cellDataValue = null;
-        public Cell[,] CellData
-        {
+        public Cell[,] CellData {
             get => cellDataValue;
-            private set
-            {
+            private set {
                 cellDataValue = value;
                 viewModel.CellData = value;
             }
         }
-        public Agent[] Agents
-        {
+        public Agent[] Agents {
             get => viewModel.Agents;
             set => viewModel.Agents = value;
         }
         private int[] playerScores = new int[2];
-        public int[] PlayerScores
-        {
+        public int[] PlayerScores {
             get => playerScores;
-            set
-            {
+            set {
                 playerScores = value;
                 viewModel.PlayerScores = value;
             }
@@ -57,7 +52,7 @@ namespace GameInterface
         public GameSettings.SettingStructure CurrentGameSettings { get; set; }
 
         public List<Decided>[] Decisions = new List<Decided>[2];
-        
+
         public GameData(MainWindowViewModel _viewModel)
         {
             viewModel = _viewModel;
@@ -72,7 +67,7 @@ namespace GameInterface
             TimeLimitSeconds = settings.LimitTime;
             IsAutoSkipTurn = settings.IsAutoSkip;
 
-            if(settings.BoardCreation == GameSettings.BoardCreation.QRCode)
+            if (settings.BoardCreation == GameSettings.BoardCreation.QRCode)
             {
                 settings.BoardWidth = (byte)settings.QCCell.GetLength(0);
                 settings.BoardHeight = (byte)settings.QCCell.GetLength(1);
@@ -162,9 +157,20 @@ namespace GameInterface
                 var posState = QRCodeReader.AgentPositioningState.Horizontal;
                 if (QRCodeReader.EnemyAgentSelectDialog.ShowDialog(out QRCodeReader.AgentPositioningState result, settings) == true)
                     posState = result;
+                QRCodeReader.RotationDialog.ShowDialog(out var rotationState, settings, posState);
+                if (rotationState == QRCodeReader.RotationState.Left)
+                {
+                    RotateBoardLeft();
+                }
+                else if (rotationState == QRCodeReader.RotationState.Right)
+                {
+                    RotateBoardLeft();
+                    RotateBoardLeft();
+                    RotateBoardLeft();
+                }
                 _Agents[2] = new Agent();
                 _Agents[3] = new Agent();
-                switch(posState)
+                switch (posState)
                 {
                     case QRCodeReader.AgentPositioningState.Horizontal:
                         _Agents[2].Point = new Point(_Agents[0].Point.X, settings.BoardHeight - 1 - _Agents[0].Point.Y);
@@ -183,6 +189,31 @@ namespace GameInterface
                         i / Constants.PlayersNum == 0 ? TeamColor.Area1P : TeamColor.Area2P;
                 }
             }
+        }
+
+        private void RotateBoardLeft()
+        {
+            var newBoard = new Cell[BoardHeight, BoardWidth];
+
+            for (int y = 0; y < BoardWidth; y++)
+            {
+                for (int x = 0; x < BoardHeight; x++)
+                {
+                    newBoard[x, y] = new Cell();
+                    newBoard[x, y] = CellData[y, BoardWidth - 1 - x];
+                }
+            }
+
+            for(int i = 0; i < Constants.AgentsNum; i++)
+            {
+                Agents[i].Point = new Point(Agents[i].Point.Y, BoardWidth - 1 - Agents[i].Point.X);
+            }
+
+            var tmp = BoardWidth;
+            this.BoardWidth = BoardHeight;
+            this.BoardHeight = tmp;
+            CellData = newBoard;
+            viewModel.CellData = newBoard;
         }
     }
 }
